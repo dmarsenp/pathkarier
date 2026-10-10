@@ -2,26 +2,55 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: 70 25% 97%;
+    --foreground: 155 30% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 155 30% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 155 30% 12%;
+    --primary: 153 40% 29%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 140 32% 93%;
+    --secondary-foreground: 153 42% 22%;
+    --muted: 80 18% 94%;
+    --muted-foreground: 155 8% 40%;
+    --accent: 140 35% 92%;
+    --accent-foreground: 153 42% 22%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 90 14% 88%;
+    --input: 90 14% 85%;
+    --ring: 153 40% 35%;
+    --chart-1: 153 40% 32%;
+    --chart-2: 160 45% 52%;
+    --chart-3: 80 45% 55%;
+    --chart-4: 40 85% 60%;
+    --chart-5: 200 50% 50%;
+    --radius: 0.75rem;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  h1, h2, h3 {
+    @apply tracking-tight;
+  }
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  .bg-hero {
+    background-image:
+      radial-gradient(60rem 30rem at 10% -10%, hsl(80 55% 88% / 0.9), transparent 60%),
+      radial-gradient(40rem 25rem at 100% 0%, hsl(150 40% 88% / 0.8), transparent 60%);
   }
 }

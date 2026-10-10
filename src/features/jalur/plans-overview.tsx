@@ -1,0 +1,63 @@
+"use client";
+
+import Link from "next/link";
+import { Compass, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { getCareer } from "@/constants/careers";
+import { useCareerPlans } from "@/hooks/use-career-plans";
+import { AltPlanCard } from "@/features/jalur/alt-plan-card";
+import { PrimaryPlanCard } from "@/features/jalur/primary-plan-card";
+
+export function PlansOverview() {
+  const { plans, ready, canAdd, setPrimary } = useCareerPlans();
+
+  if (!ready) return <Skeleton className="h-56 w-full rounded-2xl" />;
+
+  if (plans.length === 0) {
+    return (
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed bg-card p-10 text-center">
+        <Compass className="size-8 text-primary" />
+        <p className="text-lg font-semibold">Belum ada jalur yang kamu tekuni</p>
+        <p className="max-w-md text-sm text-muted-foreground">
+          Pilih satu jalur utama dari rekomendasimu. Kamu juga bisa menambah jalur alternatif untuk dicoba.
+        </p>
+        <Button asChild>
+          <Link href="/rekomendasi">Lihat rekomendasi</Link>
+        </Button>
+      </div>
+    );
+  }
+
+  const [primary, ...alternatives] = plans;
+  const primaryCareer = getCareer(primary.idKarier);
+
+  function makePrimary(id: (typeof plans)[number]["idKarier"]) {
+    setPrimary(id);
+    toast.success(`${getCareer(id)?.nama} sekarang jadi jalur utama`);
+  }
+
+  return (
+    <section className="space-y-4" aria-label="Jalur karier pilihanmu">
+      {primaryCareer && <PrimaryPlanCard plan={primary} career={primaryCareer} />}
+      <div className="grid gap-4 md:grid-cols-3">
+        {alternatives.map((plan) => {
+          const career = getCareer(plan.idKarier);
+          if (!career) return null;
+          return <AltPlanCard key={plan.idKarier} plan={plan} career={career} onMakePrimary={() => makePrimary(plan.idKarier)} />;
+        })}
+        {canAdd && (
+          <Link
+            href="/rekomendasi"
+            className="flex min-h-40 flex-col items-center justify-center gap-2 rounded-2xl border border-dashed p-5 text-center text-sm text-muted-foreground transition-colors hover:border-primary/40 hover:bg-secondary/40 hover:text-foreground"
+          >
+            <Plus className="size-5" />
+            <span className="font-medium">Coba jalur lain</span>
+            <span className="text-xs">Tambahkan sebagai alternatif dari rekomendasimu</span>
+          </Link>
+        )}
+      </div>
+    </section>
+  );
+}
