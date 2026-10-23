@@ -20,21 +20,29 @@ const LEVEL_GUIDE = [
 interface SkillFormProps {
   groups: SkillGroup[];
   initial: UserSkill[];
+  onSave: (skills: UserSkill[]) => Promise<void>;
 }
 
-export function SkillForm({ groups, initial }: SkillFormProps) {
+export function SkillForm({ groups, initial, onSave }: SkillFormProps) {
   const router = useRouter();
   const [skills, setSkills] = useState<UserSkill[]>(initial);
+  const [saving, setSaving] = useState(false);
 
   const add = (nama: string) => setSkills((prev) => [{ nama, level: "dasar" }, ...prev]);
   const remove = (nama: string) => setSkills((prev) => prev.filter((s) => s.nama !== nama));
   const setLevel = (nama: string, level: SkillLevel) =>
     setSkills((prev) => prev.map((s) => (s.nama === nama ? { ...s, level } : s)));
 
-  // TODO: PUT /api/skill (FR-06/07). Server menolak skill di luar master (422).
-  function handleSave() {
-    toast.success(`${skills.length} skill tersimpan`);
-    router.push("/rekomendasi");
+  async function handleSave() {
+    setSaving(true);
+    try {
+      await onSave(skills);
+      toast.success(`${skills.length} skill tersimpan`);
+      router.push("/rekomendasi");
+    } catch (error) {
+      setSaving(false);
+      toast.error(error instanceof Error ? error.message : "Gagal menyimpan skill.");
+    }
   }
 
   return (
@@ -60,7 +68,7 @@ export function SkillForm({ groups, initial }: SkillFormProps) {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold">Skill dipilih ({skills.length})</h2>
-          <Button onClick={handleSave} disabled={skills.length === 0}>
+          <Button onClick={handleSave} disabled={skills.length === 0 || saving}>
             Simpan & lihat rekomendasi <ArrowRight />
           </Button>
         </div>

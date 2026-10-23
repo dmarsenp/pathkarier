@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { LikertQuestion } from "@/features/asesmen/likert-question";
+import { useAssessment } from "@/hooks/use-assessment";
 import type { Question } from "@/types";
 
 interface AssessmentRunnerProps {
@@ -17,6 +18,7 @@ interface AssessmentRunnerProps {
 
 export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) {
   const router = useRouter();
+  const { saveResult } = useAssessment();
   const [page, setPage] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [showErrors, setShowErrors] = useState(false);
@@ -26,8 +28,9 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
   const answeredCount = Object.keys(answers).length;
   const isLastPage = page === totalPages - 1;
 
+  const [submitting, setSubmitting] = useState(false);
+
   function answer(id: number, value: number) {
-    // TODO: simpan draf via POST /api/asesmen (FR-05) agar bisa dilanjutkan.
     setAnswers((prev) => ({ ...prev, [id]: value }));
   }
 
@@ -37,7 +40,7 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  function handleNext() {
+  async function handleNext() {
     const missing = pageQuestions.find((q) => answers[q.id] === undefined);
     if (missing) {
       setShowErrors(true);
@@ -45,8 +48,16 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
       return;
     }
     if (!isLastPage) return goTo(page + 1);
-    toast.success("Tes selesai! Menghitung hasilmu…");
-    router.push("/asesmen/hasil");
+
+    setSubmitting(true);
+    try {
+      await saveResult(questions, answers);
+      toast.success("Tes selesai! Menghitung hasilmu…");
+      router.push("/asesmen/hasil");
+    } catch (error) {
+      setSubmitting(false);
+      toast.error(error instanceof Error ? error.message : "Gagal menyimpan hasil asesmen.");
+    }
   }
 
   return (
@@ -83,7 +94,7 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
         <Button variant="outline" size="lg" onClick={() => goTo(page - 1)} disabled={page === 0}>
           <ArrowLeft /> Sebelumnya
         </Button>
-        <Button size="lg" onClick={handleNext}>
+        <Button size="lg" onClick={handleNext} disabled={submitting}>
           {isLastPage ? "Lihat hasil" : "Berikutnya"} <ArrowRight />
         </Button>
       </div>

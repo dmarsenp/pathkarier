@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from "next/font/google";
+import { SessionProvider } from "@/components/providers/session-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import "./globals.css";
@@ -15,8 +16,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="id">
       <body className={`${jakarta.variable} font-sans`}>
-        <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
-        <Toaster position="top-center" richColors />
+        <SessionProvider>
+          <TooltipProvider delayDuration={150}>{children}</TooltipProvider>
+          <Toaster position="top-center" richColors />
+        </SessionProvider>
       </body>
     </html>
   );

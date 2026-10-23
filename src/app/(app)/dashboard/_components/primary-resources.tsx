@@ -1,29 +1,33 @@
 "use client";
 
+import { ResourceExplorer } from "@/features/sumber-belajar/resource-explorer";
 import { useCareerPlans } from "@/hooks/use-career-plans";
-import { getCareer } from "@/constants/careers";
+import { useCareers } from "@/hooks/use-careers";
+import { useRecommendations } from "@/hooks/use-recommendations";
+import { useUserSkills } from "@/hooks/use-user-skills";
+import { resourcesForCareer } from "@/lib/resources";
 
-interface PrimaryResourcesProps {
-  fallbackId: string;
-  resourcesByCareer: Record<string, React.ReactNode>;
-}
+export function PrimaryResources() {
+  const { plans, ready: plansReady } = useCareerPlans();
+  const { recommendations, ready: recsReady } = useRecommendations();
+  const { skills, ready: skillsReady } = useUserSkills();
+  const { getCareer, ready: careersReady } = useCareers();
+  if (!plansReady || !recsReady || !skillsReady || !careersReady) return null;
 
-export function PrimaryResources({ fallbackId, resourcesByCareer }: PrimaryResourcesProps) {
-  const { plans, ready } = useCareerPlans();
-  if (!ready) return null;
-
-  const id = plans[0]?.idKarier ?? fallbackId;
+  const id = plans[0]?.idKarier ?? recommendations[0]?.idKarier;
+  if (!id) return null;
   const career = getCareer(id);
+  if (!career) return null;
 
   return (
     <section className="space-y-4" aria-label="Rekomendasi kursus dan sertifikasi">
       <div>
         <h2 className="text-xl font-bold">Kursus & sertifikasi gratis untukmu</h2>
         <p className="text-sm text-muted-foreground">
-          Untuk jalur {plans.length > 0 ? "utama" : "teratas"}mu, {career?.nama}. Diurutkan dari skill yang paling perlu kamu kejar.
+          Untuk jalur {plans.length > 0 ? "utama" : "teratas"}mu, {career.nama}. Diurutkan dari skill yang paling perlu kamu kejar.
         </p>
       </div>
-      {resourcesByCareer[id]}
+      <ResourceExplorer items={resourcesForCareer(career, skills)} />
     </section>
   );
 }

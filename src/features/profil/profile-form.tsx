@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,15 +20,39 @@ const YEARS = Array.from({ length: 12 }, (_, i) => String(CURRENT_YEAR + 2 - i))
 interface ProfileFormProps {
   nama: string;
   email: string;
+  status?: UserStatus;
+  pendidikan?: string;
+  jurusan?: string;
+  tahunLulus?: number;
 }
 
-export function ProfileForm({ nama, email }: ProfileFormProps) {
+export function ProfileForm({ nama, email, status: initialStatus, pendidikan, jurusan, tahunLulus }: ProfileFormProps) {
   const router = useRouter();
-  const [status, setStatus] = useState<UserStatus | "">("");
+  const [status, setStatus] = useState<UserStatus | "">(initialStatus ?? "");
+  const [saving, setSaving] = useState(false);
 
-  // TODO: PUT /api/profil (FR-03), validasi sisi server.
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  // FR-03: pengguna melihat dan memperbarui data profil dasar.
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    setSaving(true);
+    const res = await fetch("/api/profil", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: form.get("nama"),
+        status,
+        pendidikan: form.get("pendidikan"),
+        jurusan: form.get("jurusan"),
+        tahunLulus: form.get("tahun"),
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    setSaving(false);
+    if (!res.ok) {
+      toast.error(data.error ?? "Gagal menyimpan profil.");
+      return;
+    }
     toast.success("Profil tersimpan");
     router.push("/asesmen/pengantar");
   }
@@ -56,7 +80,7 @@ export function ProfileForm({ nama, email }: ProfileFormProps) {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <FormField id="pendidikan" label="Pendidikan terakhir">
-              <Select name="pendidikan">
+              <Select name="pendidikan" defaultValue={pendidikan}>
                 <SelectTrigger id="pendidikan" className="h-11">
                   <SelectValue placeholder="Pilih jenjang" />
                 </SelectTrigger>
@@ -70,7 +94,7 @@ export function ProfileForm({ nama, email }: ProfileFormProps) {
               </Select>
             </FormField>
             <FormField id="tahun" label="Tahun lulus" hint="Perkiraan, bila belum lulus.">
-              <Select name="tahun">
+              <Select name="tahun" defaultValue={tahunLulus ? String(tahunLulus) : undefined}>
                 <SelectTrigger id="tahun" className="h-11">
                   <SelectValue placeholder="Pilih tahun" />
                 </SelectTrigger>
@@ -85,10 +109,11 @@ export function ProfileForm({ nama, email }: ProfileFormProps) {
             </FormField>
           </div>
           <FormField id="jurusan" label="Jurusan">
-            <Input id="jurusan" name="jurusan" placeholder="Contoh: Sistem Informasi" className="h-11" />
+            <Input id="jurusan" name="jurusan" defaultValue={jurusan} placeholder="Contoh: Sistem Informasi" className="h-11" />
           </FormField>
           <div className="flex justify-end">
-            <Button type="submit" size="lg" disabled={!status}>
+            <Button type="submit" size="lg" disabled={!status || saving}>
+              {saving && <Loader2 className="animate-spin" />}
               Simpan dan lanjut <ArrowRight />
             </Button>
           </div>

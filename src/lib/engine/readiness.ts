@@ -17,3 +17,14 @@ export function skillGaps(careerSkills: CareerSkill[], userSkills: UserSkill[], 
     .sort((a, b) => b.gap - a.gap)
     .slice(0, topK);
 }
+
+// Persamaan Bab 3.3.2.2.3 / SPEC 6.2: skor kesiapan skill = Σ(bobot × penguasaan) / Σbobot.
+export function skillReadinessScore(careerSkills: CareerSkill[], userSkills: UserSkill[]): number {
+  let weightedSum = 0;
+  let totalWeight = 0;
+  for (const skill of careerSkills) {
+    weightedSum += skill.bobot * LEVEL_VALUE[levelOf(skill.nama, userSkills)];
+    totalWeight += skill.bobot;
+  }
+  return totalWeight === 0 ? 0 : weightedSum / totalWeight;
+}

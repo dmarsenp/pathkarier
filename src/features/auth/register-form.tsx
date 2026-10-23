@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -32,14 +34,38 @@ export function RegisterForm() {
   const [errors, setErrors] = useState<RegisterErrors>({});
   const [loading, setLoading] = useState(false);
 
-  // TODO: POST /api/auth/register (FR-01). Validasi ulang di server dengan Zod.
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  // FR-01: registrasi akun, lalu langsung login agar pengguna masuk ke sesi aktif.
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const nextErrors = validate(new FormData(event.currentTarget), consent);
+    const form = new FormData(event.currentTarget);
+    const nextErrors = validate(form, consent);
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) return;
+
     setLoading(true);
+    const payload = { name: form.get("nama"), email: form.get("email"), password: form.get("password") };
+    const res = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      setLoading(false);
+      toast.error(data.error ?? "Gagal membuat akun. Coba lagi.");
+      return;
+    }
+
+    const result = await signIn("credentials", { email: payload.email, password: payload.password, redirect: false });
+    setLoading(false);
+    if (result?.error) {
+      toast.error("Akun dibuat, tapi gagal masuk otomatis. Silakan login.");
+      router.push("/login");
+      return;
+    }
     router.push("/profil");
+    router.refresh();
   }
 
   return (

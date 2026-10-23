@@ -2,27 +2,47 @@
 
 import { useState } from "react";
 import { FolderGit2, RefreshCw, Sparkles } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RoadmapLoading } from "@/features/rekomendasi/roadmap-loading";
 import { RoadmapTimeline } from "@/features/rekomendasi/roadmap-timeline";
-import type { AiRoadmap } from "@/types";
+import type { AiRoadmap, CareerId } from "@/types";
 
 type PanelState = "idle" | "loading" | "done";
 
 interface RoadmapPanelProps {
+  idKarier: CareerId;
   careerName: string;
   roadmap: AiRoadmap;
+  aiGenerated: boolean;
   saveAction?: React.ReactNode;
 }
 
-export function RoadmapPanel({ careerName, roadmap, saveAction }: RoadmapPanelProps) {
-  const [state, setState] = useState<PanelState>("idle");
+export function RoadmapPanel({ idKarier, careerName, roadmap: initialRoadmap, aiGenerated: initialAiGenerated, saveAction }: RoadmapPanelProps) {
+  const [state, setState] = useState<PanelState>(initialAiGenerated ? "done" : "idle");
+  const [roadmap, setRoadmap] = useState(initialRoadmap);
+  const [aiGenerated, setAiGenerated] = useState(initialAiGenerated);
 
-  // TODO: POST /api/rekomendasi/{idKarier}/roadmap. Bila gagal, tampilkan fallback (SPEC 7.6).
-  function generate() {
+  // FR-14/FR-15: minta Generative AI menyusun penjelasan & roadmap. NFR-06: tetap tampilkan
+  // versi dasar bila API gagal, disertai pesan bahwa penjelasan AI tidak tersedia sementara.
+  async function generate() {
     setState("loading");
-    setTimeout(() => setState("done"), 2400);
+    const res = await fetch(`/api/rekomendasi/${idKarier}/roadmap`, { method: "POST" });
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      toast.error("Gagal membuat roadmap. Coba lagi.");
+      setState(aiGenerated || roadmap.roadmap.length > 0 ? "done" : "idle");
+      return;
+    }
+
+    setRoadmap(data.roadmap);
+    setAiGenerated(data.aiGenerated);
+    setState("done");
+    if (!data.aiGenerated) {
+      toast.warning("Penjelasan AI tidak tersedia sementara. Menampilkan versi dasar.");
+    }
   }
 
   return (
@@ -62,6 +82,11 @@ export function RoadmapPanel({ careerName, roadmap, saveAction }: RoadmapPanelPr
         {state === "loading" && <RoadmapLoading />}
         {state === "done" && (
           <div className="space-y-8">
+            {!aiGenerated && (
+              <p className="rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-800">
+                Penjelasan AI tidak tersedia sementara — ini versi dasar berdasarkan skill gap-mu.
+              </p>
+            )}
             <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
               {roadmap.penjelasan.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
@@ -82,7 +107,9 @@ export function RoadmapPanel({ careerName, roadmap, saveAction }: RoadmapPanelPr
                 ))}
               </ul>
             </div>
-            <p className="text-xs text-muted-foreground">Dibuat dengan bantuan AI. Periksa kembali dan sesuaikan dengan kondisimu.</p>
+            <p className="text-xs text-muted-foreground">
+              {aiGenerated ? "Dibuat dengan bantuan AI. Periksa kembali dan sesuaikan dengan kondisimu." : "Perbarui skill atau coba lagi nanti untuk mendapat versi AI."}
+            </p>
           </div>
         )}
       </CardContent>

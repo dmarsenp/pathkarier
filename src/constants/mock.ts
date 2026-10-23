@@ -1,3 +1,5 @@
+import { CAREERS } from "@/constants/careers";
+import { rankCareers } from "@/lib/engine/saw";
 import type { Recommendation, RiasecScores, UserSkill } from "@/types";
 
 // Data contoh untuk tampilan UI sebelum API (SPEC Bagian 9) tersambung.
@@ -20,13 +22,9 @@ export const MOCK_USER_SKILLS: UserSkill[] = [
   { nama: "SQL", level: "dasar" },
 ];
 
-// Nilai dari fixture uji SPEC 13.1 (w1 = 0,45; w2 = 0,55).
+// Nilai dari fixture uji SPEC 13.1 (w1 = 0,45; w2 = 0,55) — hasil survei 15 praktisi (Subbab 3.2.2).
 export const MOCK_WEIGHTS = { minat: 0.45, skill: 0.55 };
 
-export const MOCK_RECOMMENDATIONS: Recommendation[] = [
-  { idKarier: "frontend", peringkat: 1, skorRiasec: 0.942, skorSkill: 0.6492, skorSaw: 0.9816 },
-  { idKarier: "ui-ux", peringkat: 2, skorRiasec: 0.9822, skorSkill: 0.55, skorSaw: 0.916 },
-  { idKarier: "backend", peringkat: 3, skorRiasec: 0.7928, skorSkill: 0.45, skorSaw: 0.7445 },
-  { idKarier: "data-analyst", peringkat: 4, skorRiasec: 0.8292, skorSkill: 0.4, skorSaw: 0.7188 },
-  { idKarier: "qa", peringkat: 5, skorRiasec: 0.7564, skorSkill: 0.42, skorSaw: 0.7024 },
-];
+// Dihitung oleh engine SAW (Bab 3.3.2.1) dari MOCK_RIASEC + MOCK_USER_SKILLS,
+// bukan lagi nilai contoh yang ditulis manual.
+export const MOCK_RECOMMENDATIONS: Recommendation[] = rankCareers(CAREERS, MOCK_RIASEC, MOCK_USER_SKILLS, MOCK_WEIGHTS);

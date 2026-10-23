@@ -1,0 +1,176 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum RiasecDim {
+  R
+  I
+  A
+  S
+  E
+  C
+}
+
+enum SkillLevel {
+  belum
+  dasar
+  mahir
+}
+
+enum UserStatus {
+  mahasiswa_akhir
+  lulusan_baru
+  career_switcher
+}
+
+// FR-01/FR-02/FR-03: registrasi, login, dan profil dasar pengguna.
+model User {
+  id              String             @id @default(cuid())
+  name            String?
+  email           String             @unique
+  passwordHash    String
+  role            Role               @default(USER)
+  status          UserStatus?
+  pendidikan      String?
+  tahunLulus      Int?
+  jurusan         String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  assessments     RiasecAssessment[]
+  skills          UserSkill[]
+  recommendations Recommendation[]
+}
+
+// Bank soal asesmen RIASEC (FR-21, dikelola admin).
+model RiasecQuestion {
+  id      Int            @id @default(autoincrement())
+  dimensi RiasecDim
+  teks    String         @db.Text
+  urutan  Int            @default(0)
+  // Soft-delete: soal nonaktif tetap tersimpan agar RiasecAnswer lama tidak kehilangan relasi (UC-09 exception).
+  aktif   Boolean        @default(true)
+  answers RiasecAnswer[]
+}
+
+// FR-04/FR-05: hasil asesmen RIASEC (skor 6 dimensi) beserta tanggal pengerjaan.
+model RiasecAssessment {
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  r           Float
+  i           Float
+  a           Float
+  s           Float
+  e           Float
+  c           Float
+  completedAt DateTime       @default(now())
+  answers     RiasecAnswer[]
+
+  @@index([userId])
+}
+
+// Jawaban per pertanyaan, supaya asesmen yang belum selesai bisa dilanjutkan (UC-03 skenario alternatif).
+model RiasecAnswer {
+  id           String           @id @default(cuid())
+  assessmentId String
+  assessment   RiasecAssessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionId   Int
+  question     RiasecQuestion   @relation(fields: [questionId], references: [id])
+  value        Int
+
+  @@unique([assessmentId, questionId])
+}
+
+// Master skill (FR-19, dikelola admin) — FR-07 memvalidasi input skill pengguna terhadap tabel ini.
+model Skill {
+  id      String        @id @default(cuid())
+  nama    String        @unique
+  careers CareerSkill[]
+  users   UserSkill[]
+}
+
+// Master karier (FR-18, dikelola admin) — profil RIASEC karier dari O*NET.
+model Career {
+  id              String           @id
+  nama            String
+  ringkas         String
+  deskripsi       String           @db.Text
+  tanggungJawab   Json
+  profilR         Float
+  profilI         Float
+  profilA         Float
+  profilS         Float
+  profilE         Float
+  profilC         Float
+  skills          CareerSkill[]
+  recommendations Recommendation[]
+}
+
+// Relasi Skill-Karier beserta bobot kontribusinya (FR-19, hasil validasi praktisi Subbab 3.2.2).
+model CareerSkill {
+  careerId String
+  career   Career @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  skillId  String
+  skill    Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  bobot    Float
+
+  @@id([careerId, skillId])
+}
+
+// FR-06: skill & level penguasaan pengguna.
+model UserSkill {
+  userId  String
+  user    User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skillId String
+  skill   Skill      @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  level   SkillLevel @default(belum)
+
+  @@id([userId, skillId])
+}
+
+// FR-20: bobot kriteria SAW yang bisa diatur admin (default hasil survei 15 praktisi, Subbab 3.2.2).
+model CriteriaWeight {
+  id        Int      @id @default(autoincrement())
+  minat     Float    @default(0.45)
+  skill     Float    @default(0.55)
+  updatedAt DateTime @updatedAt
+}
+
+// FR-11/FR-12/FR-16: hasil perhitungan SAW tersimpan per pengguna per karier.
+model Recommendation {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  careerId   String
+  career     Career   @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  skorRiasec Float
+  skorSkill  Float
+  skorSaw    Float
+  peringkat  Int
+  computedAt DateTime @default(now())
+  roadmap    Roadmap?
+
+  @@unique([userId, careerId])
+}
+
+// FR-14/FR-15/FR-16: penjelasan & roadmap dari Generative AI (explanation layer).
+model Roadmap {
+  id               String         @id @default(cuid())
+  recommendationId String         @unique
+  recommendation   Recommendation @relation(fields: [recommendationId], references: [id], onDelete: Cascade)
+  penjelasan       Json
+  steps            Json
+  proyekPortofolio Json
+  aiGenerated      Boolean        @default(false)
+  generatedAt      DateTime       @default(now())
+}

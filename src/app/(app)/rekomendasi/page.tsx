@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
 import { JourneySteps } from "@/components/layout/journey-steps";
 import { PageHeader } from "@/components/layout/page-header";
-import { getCareer } from "@/constants/careers";
-import { MOCK_RECOMMENDATIONS, MOCK_WEIGHTS } from "@/constants/mock";
-import { PlanBadge } from "@/features/jalur/plan-badge";
-import { CareerRankCard } from "@/features/rekomendasi/career-rank-card";
+import { RecommendationList } from "@/features/rekomendasi/recommendation-list";
 import { ScoringInfo } from "@/features/rekomendasi/scoring-info";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = { title: "Rekomendasi karier" };
 
-export default function RekomendasiPage() {
-  // TODO: GET /api/rekomendasi. Arahkan ke /asesmen/pengantar atau /skill bila datanya belum lengkap (SPEC 4.2).
+export default async function RekomendasiPage() {
+  const weight = await prisma.criteriaWeight.findUnique({ where: { id: 1 } });
+  const bobotMinat = weight?.minat ?? 0.45;
+  const bobotSkill = weight?.skill ?? 0.55;
+
   return (
     <div className="space-y-8">
       <JourneySteps current={3} />
@@ -19,18 +20,8 @@ export default function RekomendasiPage() {
         title="Karier TI yang paling cocok untukmu"
         description="Diurutkan dari skor tertinggi berdasarkan profil minat dan skill-mu. Buka detail untuk memilih jalur utama, atau tambahkan jalur lain sebagai alternatif."
       />
-      <ScoringInfo bobotMinat={MOCK_WEIGHTS.minat} bobotSkill={MOCK_WEIGHTS.skill} />
-      <ol className="space-y-4">
-        {MOCK_RECOMMENDATIONS.map((result) => {
-          const career = getCareer(result.idKarier);
-          if (!career) return null;
-          return (
-            <li key={result.idKarier}>
-              <CareerRankCard career={career} result={result} badge={<PlanBadge idKarier={career.id} />} />
-            </li>
-          );
-        })}
-      </ol>
+      <ScoringInfo bobotMinat={bobotMinat} bobotSkill={bobotSkill} />
+      <RecommendationList />
     </div>
   );
 }

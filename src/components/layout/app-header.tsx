@@ -1,10 +1,15 @@
+import { getServerSession } from "next-auth";
 import { SiteLogo } from "@/components/layout/site-logo";
 import { NavLinks } from "@/components/layout/nav-links";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { UserMenu } from "@/components/layout/user-menu";
-import { MOCK_USER } from "@/constants/mock";
+import { authOptions } from "@/lib/auth-options";
 
-export function AppHeader() {
+export async function AppHeader() {
+  const session = await getServerSession(authOptions);
+  const nama = session?.user?.name ?? "Pengguna";
+  const email = session?.user?.email ?? "";
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4">
@@ -15,7 +20,7 @@ export function AppHeader() {
         <div className="hidden md:block">
           <NavLinks />
         </div>
-        <UserMenu nama={MOCK_USER.nama} email={MOCK_USER.email} />
+        <UserMenu nama={nama} email={email} isAdmin={session?.user?.role === "ADMIN"} />
       </div>
     </header>
   );

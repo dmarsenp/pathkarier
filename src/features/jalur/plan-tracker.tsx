@@ -6,21 +6,25 @@ import { Route } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getCareer } from "@/constants/careers";
 import { useCareerPlans } from "@/hooks/use-career-plans";
+import { useCareers } from "@/hooks/use-careers";
+import { useUserSkills } from "@/hooks/use-user-skills";
 import { PlanDetail } from "@/features/jalur/plan-detail";
+import { ResourceExplorer } from "@/features/sumber-belajar/resource-explorer";
 import { planLabel, planProgress } from "@/lib/plans";
+import { resourcesForCareer } from "@/lib/resources";
 
 interface PlanTrackerProps {
   initialId?: string;
-  resourcesByCareer: Record<string, React.ReactNode>;
 }
 
-export function PlanTracker({ initialId, resourcesByCareer }: PlanTrackerProps) {
-  const { plans, ready } = useCareerPlans();
+export function PlanTracker({ initialId }: PlanTrackerProps) {
+  const { plans, ready: plansReady } = useCareerPlans();
+  const { skills, ready: skillsReady } = useUserSkills();
+  const { getCareer, ready: careersReady } = useCareers();
   const [selected, setSelected] = useState(initialId);
 
-  if (!ready) return <Skeleton className="h-96 w-full rounded-2xl" />;
+  if (!plansReady || !skillsReady || !careersReady) return <Skeleton className="h-96 w-full rounded-2xl" />;
 
   if (plans.length === 0) {
     return (
@@ -56,7 +60,14 @@ export function PlanTracker({ initialId, resourcesByCareer }: PlanTrackerProps) 
           ))}
         </TabsList>
       </Tabs>
-      {career && <PlanDetail key={active.idKarier} plan={active} career={career} resources={resourcesByCareer[career.id]} />}
+      {career && (
+        <PlanDetail
+          key={active.idKarier}
+          plan={active}
+          career={career}
+          resources={<ResourceExplorer items={resourcesForCareer(career, skills)} />}
+        />
+      )}
     </div>
   );
 }

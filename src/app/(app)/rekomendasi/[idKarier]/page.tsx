@@ -1,41 +1,47 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { getServerSession } from "next-auth";
 import { CheckCircle2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { CAREERS, getCareer } from "@/constants/careers";
-import { MOCK_RECOMMENDATIONS, MOCK_RIASEC, MOCK_USER_SKILLS, MOCK_WEIGHTS } from "@/constants/mock";
 import { SavePlanButton } from "@/features/jalur/save-plan-button";
 import { CareerHero } from "@/features/rekomendasi/career-hero";
 import { MatchReasonCard } from "@/features/rekomendasi/match-reason-card";
+import { RecommendationBlockerCard } from "@/features/rekomendasi/recommendation-blocker";
 import { RoadmapPanel } from "@/features/rekomendasi/roadmap-panel";
 import { SkillGapCard } from "@/features/rekomendasi/skill-gap-card";
 import { ResourceExplorer } from "@/features/sumber-belajar/resource-explorer";
-import { skillGaps } from "@/lib/engine/readiness";
-import { topContributors } from "@/lib/engine/riasec";
-import { buildMockRoadmap } from "@/lib/mock-roadmap";
+import { authOptions } from "@/lib/auth-options";
+import { prisma } from "@/lib/prisma";
+import { getCareerDetail, RecommendationPrerequisiteError } from "@/lib/recommendation";
 import { resourcesForCareer } from "@/lib/resources";
 
 interface DetailPageProps {
   params: { idKarier: string };
 }
 
-export function generateStaticParams(): { idKarier: string }[] {
-  return CAREERS.map((career) => ({ idKarier: career.id }));
+// Halaman ini personal per pengguna (sesi + data DB terkini), jadi sengaja tidak di-generate
+// statis — generateMetadata membaca nama karier langsung dari DB agar selalu akurat (NFR-05).
+export async function generateMetadata({ params }: DetailPageProps): Promise<Metadata> {
+  const career = await prisma.career.findUnique({ where: { id: params.idKarier }, select: { nama: true } });
+  return { title: career?.nama ?? "Detail karier" };
 }
 
-export function generateMetadata({ params }: DetailPageProps): Metadata {
-  return { title: getCareer(params.idKarier)?.nama ?? "Detail karier" };
-}
+export default async function RekomendasiDetailPage({ params }: DetailPageProps) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) notFound();
 
-export default function RekomendasiDetailPage({ params }: DetailPageProps) {
-  // TODO: GET /api/rekomendasi/{idKarier}/detail. Bagian deterministik ini selalu tampil (FR-13).
-  const career = getCareer(params.idKarier);
-  const result = MOCK_RECOMMENDATIONS.find((r) => r.idKarier === params.idKarier);
-  if (!career || !result) notFound();
+  let detail;
+  try {
+    detail = await getCareerDetail(session.user.id, params.idKarier);
+  } catch (error) {
+    if (error instanceof RecommendationPrerequisiteError) {
+      return <RecommendationBlockerCard reason={error.reason} />;
+    }
+    throw error;
+  }
+  if (!detail) notFound();
 
-  const gaps = skillGaps(career.skills, MOCK_USER_SKILLS);
-  const dims = topContributors(MOCK_RIASEC, career.profil);
-  const roadmap = buildMockRoadmap(career.nama, gaps);
+  const { career, result, gaps, dims, roadmap, aiGenerated, userSkills, weights } = detail;
   const saveButton = (
     <SavePlanButton idKarier={career.id} careerName={career.nama} skorSaw={result.skorSaw} roadmap={roadmap.roadmap} />
   );
@@ -44,7 +50,7 @@ export default function RekomendasiDetailPage({ params }: DetailPageProps) {
     <div className="space-y-6">
       <CareerHero career={career} result={result} actions={saveButton} />
       <div className="grid gap-6 lg:grid-cols-2">
-        <MatchReasonCard careerName={career.nama} dims={dims} result={result} bobot={MOCK_WEIGHTS} />
+        <MatchReasonCard careerName={career.nama} dims={dims} result={result} bobot={weights} />
         <SkillGapCard gaps={gaps} />
       </div>
       <Card className="rounded-2xl">
@@ -61,7 +67,7 @@ export default function RekomendasiDetailPage({ params }: DetailPageProps) {
           </ul>
         </CardContent>
       </Card>
-      <RoadmapPanel careerName={career.nama} roadmap={roadmap} saveAction={saveButton} />
+      <RoadmapPanel idKarier={career.id} careerName={career.nama} roadmap={roadmap} aiGenerated={aiGenerated} saveAction={saveButton} />
       <Card className="rounded-2xl">
         <CardHeader>
           <CardTitle className="text-lg">Kursus & sertifikasi gratis</CardTitle>
@@ -70,7 +76,7 @@ export default function RekomendasiDetailPage({ params }: DetailPageProps) {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <ResourceExplorer items={resourcesForCareer(career, MOCK_USER_SKILLS)} />
+          <ResourceExplorer items={resourcesForCareer(career, userSkills)} />
         </CardContent>
       </Card>
     </div>

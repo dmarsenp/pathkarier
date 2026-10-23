@@ -5,15 +5,16 @@ import { Compass, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getCareer } from "@/constants/careers";
 import { useCareerPlans } from "@/hooks/use-career-plans";
+import { useCareers } from "@/hooks/use-careers";
 import { AltPlanCard } from "@/features/jalur/alt-plan-card";
 import { PrimaryPlanCard } from "@/features/jalur/primary-plan-card";
 
 export function PlansOverview() {
   const { plans, ready, canAdd, setPrimary } = useCareerPlans();
+  const { getCareer, ready: careersReady } = useCareers();
 
-  if (!ready) return <Skeleton className="h-56 w-full rounded-2xl" />;
+  if (!ready || !careersReady) return <Skeleton className="h-56 w-full rounded-2xl" />;
 
   if (plans.length === 0) {
     return (

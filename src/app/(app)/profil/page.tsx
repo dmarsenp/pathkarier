@@ -1,13 +1,23 @@
 import type { Metadata } from "next";
+import { getServerSession } from "next-auth";
 import { Lock, Sparkles } from "lucide-react";
 import { JourneySteps } from "@/components/layout/journey-steps";
 import { PageHeader } from "@/components/layout/page-header";
-import { MOCK_USER } from "@/constants/mock";
 import { ProfileForm } from "@/features/profil/profile-form";
+import { authOptions } from "@/lib/auth-options";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = { title: "Profil" };
 
-export default function ProfilPage() {
+export default async function ProfilPage() {
+  const session = await getServerSession(authOptions);
+  const user = session?.user?.id
+    ? await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { name: true, email: true, status: true, pendidikan: true, jurusan: true, tahunLulus: true },
+      })
+    : null;
+
   return (
     <div className="space-y-8">
       <JourneySteps current={0} />
@@ -17,7 +27,14 @@ export default function ProfilPage() {
         description="Informasi ini membantu kami memahami titik awalmu. Hanya butuh satu menit."
       />
       <div className="grid gap-6 lg:grid-cols-[1fr_300px]">
-        <ProfileForm nama={MOCK_USER.nama} email={MOCK_USER.email} />
+        <ProfileForm
+          nama={user?.name ?? ""}
+          email={user?.email ?? ""}
+          status={user?.status ?? undefined}
+          pendidikan={user?.pendidikan ?? undefined}
+          jurusan={user?.jurusan ?? undefined}
+          tahunLulus={user?.tahunLulus ?? undefined}
+        />
         <aside className="space-y-4">
           <div className="rounded-2xl bg-secondary/70 p-5">
             <Sparkles className="mb-3 size-5 text-primary" />

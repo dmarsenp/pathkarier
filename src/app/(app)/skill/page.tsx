@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import { JourneySteps } from "@/components/layout/journey-steps";
 import { PageHeader } from "@/components/layout/page-header";
-import { getSkillGroups } from "@/constants/careers";
-import { MOCK_USER_SKILLS } from "@/constants/mock";
-import { SkillForm } from "@/features/skill/skill-form";
+import { SkillFormContainer } from "@/features/skill/skill-form-container";
+import { getSkillGroupsFromDb } from "@/lib/skills";
 
 export const metadata: Metadata = { title: "Skill" };
 
-export default function SkillPage() {
-  // TODO: ambil master skill (GET /api/skill/master) dan skill pengguna (GET /api/skill).
+export default async function SkillPage() {
+  const groups = await getSkillGroupsFromDb();
   return (
     <div className="space-y-8">
       <JourneySteps current={2} />
@@ -17,7 +16,7 @@ export default function SkillPage() {
         title="Skill apa yang sudah kamu kuasai?"
         description="Pilih skill lalu tentukan levelnya dengan jujur. Skill yang tidak dipilih dianggap belum dikuasai."
       />
-      <SkillForm groups={getSkillGroups()} initial={MOCK_USER_SKILLS} />
+      <SkillFormContainer groups={groups} />
     </div>
   );
 }

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import { LogOut, UserRound } from "lucide-react";
+import { LogOut, ShieldCheck, UserRound } from "lucide-react";
+import { signOut } from "next-auth/react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -14,9 +17,10 @@ import { initials } from "@/lib/format";
 interface UserMenuProps {
   nama: string;
   email: string;
+  isAdmin?: boolean;
 }
 
-export function UserMenu({ nama, email }: UserMenuProps) {
+export function UserMenu({ nama, email, isAdmin }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2 rounded-full p-1 pr-3 outline-none ring-ring transition-colors hover:bg-secondary focus-visible:ring-2">
@@ -36,10 +40,15 @@ export function UserMenu({ nama, email }: UserMenuProps) {
             <UserRound /> Profil saya
           </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem asChild>
-          <Link href="/login">
-            <LogOut /> Keluar
-          </Link>
+        {isAdmin && (
+          <DropdownMenuItem asChild>
+            <Link href="/admin">
+              <ShieldCheck /> Panel admin
+            </Link>
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuItem onSelect={() => signOut({ callbackUrl: "/login" })}>
+          <LogOut /> Keluar
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

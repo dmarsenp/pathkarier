@@ -3,7 +3,9 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -15,11 +17,23 @@ export function LoginForm() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  // TODO: sambungkan ke Auth.js (signIn credentials). Pesan gagal tidak boleh membocorkan field yang salah (FR-02).
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  // FR-02: pesan gagal generik, tidak membocorkan field yang salah (email terdaftar atau password salah).
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
+    const form = new FormData(event.currentTarget);
+    const result = await signIn("credentials", {
+      email: form.get("email"),
+      password: form.get("password"),
+      redirect: false,
+    });
+    setLoading(false);
+    if (result?.error) {
+      toast.error("Email atau password salah.");
+      return;
+    }
     router.push("/dashboard");
+    router.refresh();
   }
 
   return (
