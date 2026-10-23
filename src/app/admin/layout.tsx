@@ -10,16 +10,18 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (session.user.role !== "ADMIN") redirect("/dashboard");
 
   return (
-    <div className="flex min-h-dvh bg-muted/30">
+    <div className="flex h-dvh overflow-hidden bg-muted/30">
       <AdminSidebar />
-      <div className="flex-1">
-        <header className="flex h-16 items-center justify-end gap-3 border-b bg-background px-6">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <header className="flex h-16 shrink-0 items-center justify-end gap-3 border-b bg-background px-6">
           <div className="text-right">
             <p className="text-sm font-semibold">{session.user.name}</p>
             <p className="text-xs text-muted-foreground">Admin</p>
           </div>
         </header>
-        <main className="mx-auto max-w-6xl space-y-6 p-6">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto">
+          <div className="mx-auto max-w-6xl space-y-6 p-6">{children}</div>
+        </main>
       </div>
     </div>
   );

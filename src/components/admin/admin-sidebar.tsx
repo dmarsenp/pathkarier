@@ -29,7 +29,7 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="flex h-dvh w-64 shrink-0 flex-col bg-[#0b1437] text-slate-200">
+    <aside className="flex h-full w-64 shrink-0 flex-col overflow-y-auto bg-[#0b1437] text-slate-200">
       <div className="flex items-center gap-2 px-5 py-6">
         <span className="grid size-8 place-items-center rounded-lg bg-primary font-bold text-primary-foreground">P</span>
         <span className="text-lg font-bold text-white">PathKarier</span>
