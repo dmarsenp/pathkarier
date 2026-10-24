@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
@@ -16,12 +17,27 @@ import { Button } from "@/components/ui/button";
 
 interface RemovePlanDialogProps {
   careerName: string;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void> | void;
 }
 
 export function RemovePlanDialog({ careerName, onConfirm }: RemovePlanDialogProps) {
+  const [open, setOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleConfirm() {
+    setDeleting(true);
+    try {
+      await onConfirm();
+      setOpen(false);
+    } catch {
+      // error already surfaced by caller (toast)
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={(next) => !deleting && setOpen(next)}>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive">
           <Trash2 /> Hapus jalur
@@ -36,10 +52,15 @@ export function RemovePlanDialog({ careerName, onConfirm }: RemovePlanDialogProp
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Batal</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogCancel disabled={deleting}>Batal</AlertDialogCancel>
+          <Button
+            variant="destructive"
+            onClick={handleConfirm}
+            isLoading={deleting}
+            loadingText="Menghapus..."
+          >
             Hapus
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

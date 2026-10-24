@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -43,16 +42,14 @@ export function AdminDeleteDialog({ title, description, onConfirm }: AdminDelete
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>Batal</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={(e) => {
-              e.preventDefault();
-              handleConfirm();
-            }}
-            disabled={loading}
-            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+          <Button
+            variant="destructive"
+            onClick={handleConfirm}
+            isLoading={loading}
+            loadingText="Menghapus..."
           >
             Hapus
-          </AlertDialogAction>
+          </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

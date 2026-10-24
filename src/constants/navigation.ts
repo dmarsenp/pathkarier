@@ -1,14 +1,9 @@
 export const APP_NAV = [
   { href: "/dashboard", label: "Beranda" },
-  { href: "/asesmen/pengantar", label: "Tes minat", match: "/asesmen" },
+  { href: "/asesmen/hasil", label: "Tes minat", match: ["/asesmen/hasil", "/asesmen"] },
+  { href: "/asesmen/pengantar", label: "Asesmen baru", match: ["/asesmen/pengantar"] },
   { href: "/skill", label: "Skill" },
   { href: "/rekomendasi", label: "Rekomendasi" },
   { href: "/jalur", label: "Jalur belajar" },
 ] as const;
 
-export const JOURNEY_STEPS = [
-  { label: "Profil", href: "/profil" },
-  { label: "Tes minat", href: "/asesmen/pengantar" },
-  { label: "Skill", href: "/skill" },
-  { label: "Rekomendasi", href: "/rekomendasi" },
-] as const;

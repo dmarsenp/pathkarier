@@ -1,10 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { MAX_PLANS, demoPlans, renumber } from "@/lib/plans";
+import { MAX_PLANS } from "@/lib/plans";
 import type { CareerId, CareerPlan, RoadmapStep } from "@/types";
-
-const STORAGE_KEY = "pathkarier:jalur";
 
 interface SavePlanInput {
   idKarier: CareerId;
@@ -17,63 +15,83 @@ interface CareerPlansValue {
   ready: boolean;
   canAdd: boolean;
   getPlan: (id: CareerId) => CareerPlan | undefined;
-  savePlan: (input: SavePlanInput, asPrimary: boolean) => void;
-  removePlan: (id: CareerId) => void;
-  setPrimary: (id: CareerId) => void;
-  toggleStep: (id: CareerId, urutan: number) => void;
+  savePlan: (input: SavePlanInput, asPrimary: boolean) => Promise<void>;
+  removePlan: (id: CareerId) => Promise<void>;
+  setPrimary: (id: CareerId) => Promise<void>;
+  toggleStep: (id: CareerId, urutan: number) => Promise<void>;
+  setCertificate: (id: CareerId, urutan: number, url: string) => Promise<void>;
 }
 
 const CareerPlansContext = createContext<CareerPlansValue | null>(null);
 
-function readStorage(): CareerPlan[] {
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    return raw === null ? demoPlans() : (JSON.parse(raw) as CareerPlan[]);
-  } catch {
-    return demoPlans();
-  }
+async function fetchPlans(): Promise<CareerPlan[]> {
+  const res = await fetch("/api/jalur");
+  if (!res.ok) return [];
+  const data = await res.json().catch(() => ({}));
+  return data.plans ?? [];
 }
 
-// Penyimpanan sementara di browser. TODO: ganti dengan API `/api/jalur` (lihat docs/usulan-jalur-belajar.md).
+// FR-? Jalur belajar: karier yang disimpan pengguna beserta progres roadmap-nya, disimpan
+// server-side (lihat /api/jalur) agar konsisten dengan arsitektur DB-backed lainnya.
 export function CareerPlansProvider({ children }: { children: React.ReactNode }) {
   const [plans, setPlans] = useState<CareerPlan[]>([]);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setPlans(readStorage());
-    setReady(true);
+    let cancelled = false;
+    fetchPlans()
+      .then((data) => {
+        if (!cancelled) setPlans(data);
+      })
+      .finally(() => {
+        if (!cancelled) setReady(true);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
-
-  useEffect(() => {
-    if (!ready) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(plans));
-    } catch {
-      console.warn("[jalur] gagal menyimpan ke localStorage");
-    }
-  }, [plans, ready]);
 
   const getPlan = useCallback((id: CareerId) => plans.find((p) => p.idKarier === id), [plans]);
 
-  const savePlan = useCallback((input: SavePlanInput, asPrimary: boolean) => {
-    setPlans((prev) => {
-      const others = prev.filter((p) => p.idKarier !== input.idKarier);
-      const existing = prev.find((p) => p.idKarier === input.idKarier);
-      const plan: CareerPlan = existing ?? { ...input, prioritas: 0, disimpanPada: new Date().toISOString(), selesai: {} };
-      return renumber(asPrimary ? [plan, ...others] : [...others, plan]);
-    });
-  }, []);
+  const refresh = useCallback(async () => setPlans(await fetchPlans()), []);
 
-  const removePlan = useCallback((id: CareerId) => setPlans((prev) => renumber(prev.filter((p) => p.idKarier !== id))), []);
+  const savePlan = useCallback(
+    async (input: SavePlanInput, asPrimary: boolean) => {
+      const res = await fetch("/api/jalur", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...input, asPrimary }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error ?? "Gagal menyimpan jalur.");
+      await refresh();
+    },
+    [refresh],
+  );
 
-  const setPrimary = useCallback((id: CareerId) => {
-    setPlans((prev) => {
-      const target = prev.find((p) => p.idKarier === id);
-      return target ? renumber([target, ...prev.filter((p) => p.idKarier !== id)]) : prev;
-    });
-  }, []);
+  const removePlan = useCallback(
+    async (id: CareerId) => {
+      const res = await fetch(`/api/jalur/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Gagal menghapus jalur.");
+      await refresh();
+    },
+    [refresh],
+  );
 
-  const toggleStep = useCallback((id: CareerId, urutan: number) => {
+  const setPrimary = useCallback(
+    async (id: CareerId) => {
+      const res = await fetch(`/api/jalur/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "setPrimary" }),
+      });
+      if (!res.ok) throw new Error("Gagal menjadikan jalur utama.");
+      await refresh();
+    },
+    [refresh],
+  );
+
+  const toggleStep = useCallback(async (id: CareerId, urutan: number) => {
     setPlans((prev) =>
       prev.map((plan) => {
         if (plan.idKarier !== id) return plan;
@@ -83,11 +101,28 @@ export function CareerPlansProvider({ children }: { children: React.ReactNode })
         return { ...plan, selesai };
       }),
     );
+    const res = await fetch(`/api/jalur/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "toggleStep", urutan }),
+    });
+    if (!res.ok) throw new Error("Gagal menyimpan progres roadmap.");
+  }, []);
+
+  const setCertificate = useCallback(async (id: CareerId, urutan: number, url: string) => {
+    const res = await fetch(`/api/jalur/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "setCertificate", urutan, url }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error ?? "Gagal menyimpan link sertifikat.");
+    setPlans((prev) => prev.map((plan) => (plan.idKarier === id ? { ...plan, roadmap: data.roadmap } : plan)));
   }, []);
 
   const value = useMemo(
-    () => ({ plans, ready, canAdd: plans.length < MAX_PLANS, getPlan, savePlan, removePlan, setPrimary, toggleStep }),
-    [plans, ready, getPlan, savePlan, removePlan, setPrimary, toggleStep],
+    () => ({ plans, ready, canAdd: plans.length < MAX_PLANS, getPlan, savePlan, removePlan, setPrimary, toggleStep, setCertificate }),
+    [plans, ready, getPlan, savePlan, removePlan, setPrimary, toggleStep, setCertificate],
   );
 
   return <CareerPlansContext.Provider value={value}>{children}</CareerPlansContext.Provider>;

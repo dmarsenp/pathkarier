@@ -68,7 +68,7 @@ export function SkillForm({ groups, initial, onSave }: SkillFormProps) {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold">Skill dipilih ({skills.length})</h2>
-          <Button onClick={handleSave} disabled={skills.length === 0 || saving}>
+          <Button onClick={handleSave} disabled={skills.length === 0} isLoading={saving} loadingText="Menyimpan...">
             Simpan & lihat rekomendasi <ArrowRight />
           </Button>
         </div>

@@ -21,6 +21,8 @@ export function buildMockRoadmap(careerName: string, gaps: SkillGap[]): AiRoadma
       skill: gap.nama,
       aktivitas: ACTIVITIES[i % ACTIVITIES.length],
       estimasiMinggu: Math.min(12, Math.max(1, Math.round(gap.gap * 1.5))),
+      videoTitle: `Tutorial ${gap.nama} di YouTube`,
+      videoUrl: `https://www.youtube.com/results?search_query=${encodeURIComponent(`tutorial ${gap.nama}`)}`,
     })),
     proyekPortofolio: [
       { judul: `Proyek mini ${careerName}: studi kasus dari awal sampai akhir`, skillTerkait: top },

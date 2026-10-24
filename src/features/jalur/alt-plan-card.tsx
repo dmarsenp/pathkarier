@@ -10,9 +10,10 @@ interface AltPlanCardProps {
   plan: CareerPlan;
   career: Career;
   onMakePrimary: () => void;
+  isMakingPrimary?: boolean;
 }
 
-export function AltPlanCard({ plan, career, onMakePrimary }: AltPlanCardProps) {
+export function AltPlanCard({ plan, career, onMakePrimary, isMakingPrimary }: AltPlanCardProps) {
   const progress = planProgress(plan);
 
   return (
@@ -37,7 +38,7 @@ export function AltPlanCard({ plan, career, onMakePrimary }: AltPlanCardProps) {
           <Button asChild size="sm" variant="outline" className="flex-1">
             <Link href={`/jalur?karier=${career.id}`}>Buka</Link>
           </Button>
-          <Button size="sm" variant="ghost" onClick={onMakePrimary}>
+          <Button size="sm" variant="ghost" onClick={onMakePrimary} isLoading={isMakingPrimary} loadingText="Memproses...">
             <Star /> Jadikan utama
           </Button>
         </div>

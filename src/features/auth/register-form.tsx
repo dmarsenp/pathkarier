@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -101,8 +100,7 @@ export function RegisterForm() {
           </div>
           {errors.consent && <p className="pl-7 text-xs font-medium text-destructive">{errors.consent}</p>}
         </div>
-        <Button type="submit" size="lg" className="h-11 w-full rounded-full" disabled={loading}>
-          {loading && <Loader2 className="animate-spin" />}
+        <Button type="submit" size="lg" className="h-11 w-full rounded-full" isLoading={loading} loadingText="Membuat akun...">
           Buat akun
         </Button>
       </form>

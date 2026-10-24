@@ -17,7 +17,7 @@ export function NavLinks({ vertical = false, onNavigate }: NavLinksProps) {
     <nav className={cn("flex gap-1", vertical ? "flex-col" : "items-center")}>
       {APP_NAV.map((item) => {
         const match = "match" in item ? item.match : item.href;
-        const active = pathname.startsWith(match);
+        const active: boolean = Array.isArray(match) ? match.includes(pathname) : pathname.startsWith(match as string);
         return (
           <Link
             key={item.href}

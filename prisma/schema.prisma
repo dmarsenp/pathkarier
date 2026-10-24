@@ -49,6 +49,7 @@ model User {
   assessments     RiasecAssessment[]
   skills          UserSkill[]
   recommendations Recommendation[]
+  careerPlans     CareerPlan[]
 }
 
 // Bank soal asesmen RIASEC (FR-21, dikelola admin).
@@ -114,6 +115,7 @@ model Career {
   profilC         Float
   skills          CareerSkill[]
   recommendations Recommendation[]
+  careerPlans     CareerPlan[]
 }
 
 // Relasi Skill-Karier beserta bobot kontribusinya (FR-19, hasil validasi praktisi Subbab 3.2.2).
@@ -173,4 +175,23 @@ model Roadmap {
   proyekPortofolio Json
   aiGenerated      Boolean        @default(false)
   generatedAt      DateTime       @default(now())
+}
+
+// Jalur belajar: karier yang disimpan pengguna untuk dilacak progresnya, beserta checklist roadmap.
+// Dipindah dari localStorage agar konsisten dengan arsitektur DB-backed lainnya dan persist lintas device.
+model CareerPlan {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  careerId  String
+  career    Career   @relation(fields: [careerId], references: [id], onDelete: Cascade)
+  prioritas Int // 1 = jalur utama, >1 = alternatif (urutan)
+  skorSaw   Float
+  roadmap   Json // snapshot RoadmapStep[] saat jalur disimpan
+  selesai   Json // map { [urutan: number]: ISODateString } langkah yang sudah ditandai selesai
+  savedAt   DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, careerId])
+  @@index([userId])
 }

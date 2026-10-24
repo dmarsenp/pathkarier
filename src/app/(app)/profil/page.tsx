@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { Lock, Sparkles } from "lucide-react";
-import { JourneySteps } from "@/components/layout/journey-steps";
 import { PageHeader } from "@/components/layout/page-header";
 import { ProfileForm } from "@/features/profil/profile-form";
 import { authOptions } from "@/lib/auth-options";
@@ -20,9 +19,8 @@ export default async function ProfilPage() {
 
   return (
     <div className="space-y-8">
-      <JourneySteps current={0} />
       <PageHeader
-        eyebrow="Langkah 1 dari 4"
+        eyebrow="Profil"
         title="Lengkapi profilmu"
         description="Informasi ini membantu kami memahami titik awalmu. Hanya butuh satu menit."
       />

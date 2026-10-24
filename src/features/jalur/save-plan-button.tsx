@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { BookmarkPlus, Check, ChevronDown, Star } from "lucide-react";
@@ -29,14 +30,34 @@ export function SavePlanButton({ idKarier, careerName, skorSaw, roadmap }: SaveP
   const router = useRouter();
   const { ready, canAdd, plans, getPlan, savePlan, setPrimary } = useCareerPlans();
   const plan = getPlan(idKarier);
+  const [saving, setSaving] = useState(false);
+  const [settingPrimary, setSettingPrimary] = useState(false);
 
   if (!ready) return <Skeleton className="h-10 w-44 rounded-md" />;
 
-  function save(asPrimary: boolean) {
-    savePlan({ idKarier, skorSaw, roadmap }, asPrimary);
-    toast.success(`${careerName} disimpan sebagai ${asPrimary ? "jalur utama" : "jalur alternatif"}`, {
-      action: { label: "Pantau progres", onClick: () => router.push(`/jalur?karier=${idKarier}`) },
-    });
+  async function save(asPrimary: boolean) {
+    setSaving(true);
+    try {
+      await savePlan({ idKarier, skorSaw, roadmap }, asPrimary);
+      toast.success(`${careerName} disimpan sebagai ${asPrimary ? "jalur utama" : "jalur alternatif"}`, {
+        action: { label: "Pantau progres", onClick: () => router.push(`/jalur?karier=${idKarier}`) },
+      });
+    } catch {
+      toast.error("Gagal menyimpan jalur. Coba lagi.");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleSetPrimary() {
+    setSettingPrimary(true);
+    try {
+      await setPrimary(idKarier);
+    } catch {
+      toast.error("Gagal menjadikan jalur utama.");
+    } finally {
+      setSettingPrimary(false);
+    }
   }
 
   if (plan) {
@@ -48,7 +69,7 @@ export function SavePlanButton({ idKarier, careerName, skorSaw, roadmap }: SaveP
           </Link>
         </Button>
         {plan.prioritas > 1 && (
-          <Button variant="outline" onClick={() => setPrimary(idKarier)}>
+          <Button variant="outline" onClick={handleSetPrimary} isLoading={settingPrimary} loadingText="Memproses...">
             <Star /> Jadikan utama
           </Button>
         )}
@@ -66,7 +87,7 @@ export function SavePlanButton({ idKarier, careerName, skorSaw, roadmap }: SaveP
 
   if (plans.length === 0) {
     return (
-      <Button onClick={() => save(true)}>
+      <Button onClick={() => save(true)} isLoading={saving} loadingText="Menyimpan...">
         <BookmarkPlus /> Pilih sebagai jalur utama
       </Button>
     );
@@ -75,7 +96,7 @@ export function SavePlanButton({ idKarier, careerName, skorSaw, roadmap }: SaveP
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button>
+        <Button isLoading={saving} loadingText="Menyimpan...">
           <BookmarkPlus /> Simpan ke jalurku <ChevronDown />
         </Button>
       </DropdownMenuTrigger>

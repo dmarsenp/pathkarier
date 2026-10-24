@@ -94,7 +94,7 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
         <Button variant="outline" size="lg" onClick={() => goTo(page - 1)} disabled={page === 0}>
           <ArrowLeft /> Sebelumnya
         </Button>
-        <Button size="lg" onClick={handleNext} disabled={submitting}>
+        <Button size="lg" onClick={handleNext} isLoading={submitting} loadingText="Mengirim jawaban...">
           {isLastPage ? "Lihat hasil" : "Berikutnya"} <ArrowRight />
         </Button>
       </div>

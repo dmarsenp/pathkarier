@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RiasecRadar } from "@/components/charts/riasec-radar";
-import { JourneySteps } from "@/components/layout/journey-steps";
 import { PageHeader } from "@/components/layout/page-header";
 import { RIASEC_META, RIASEC_ORDER } from "@/constants/riasec";
 import { HollandCodeCard } from "@/features/asesmen/holland-code-card";
@@ -27,7 +26,6 @@ export function AssessmentResult() {
   if (!result) {
     return (
       <div className="space-y-8">
-        <JourneySteps current={1} />
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed bg-card p-10 text-center">
           <Compass className="size-8 text-primary" />
           <p className="text-lg font-semibold">Kamu belum pernah mengerjakan tes minat</p>
@@ -48,7 +46,6 @@ export function AssessmentResult() {
 
   return (
     <div className="space-y-8">
-      <JourneySteps current={1} />
       <PageHeader
         eyebrow={`Tes selesai · ${formatTanggalPanjang(result.selesaiPada)}`}
         title="Ini profil minat kerjamu"

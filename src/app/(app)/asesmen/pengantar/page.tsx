@@ -4,7 +4,6 @@ import { ArrowRight, Clock, ListChecks, MessageCircleHeart } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RiasecChip } from "@/components/ui/riasec-chip";
-import { JourneySteps } from "@/components/layout/journey-steps";
 import { PageHeader } from "@/components/layout/page-header";
 import { RIASEC_META, RIASEC_ORDER } from "@/constants/riasec";
 
@@ -19,9 +18,8 @@ const TIPS = [
 export default function AsesmenPengantarPage() {
   return (
     <div className="space-y-8">
-      <JourneySteps current={1} />
       <PageHeader
-        eyebrow="Langkah 2 dari 4 · Tes minat RIASEC"
+        eyebrow="Asesmen baru · Tes minat RIASEC"
         title="Kenali 6 tipe minat kerjamu"
         description="Model Holland (RIASEC) memetakan minat ke enam tipe. Kebanyakan orang punya campuran beberapa tipe, dan tiga yang paling kuat menjadi kode Holland-mu."
       />

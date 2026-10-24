@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { Compass, Plus } from "lucide-react";
 import { toast } from "sonner";
@@ -9,10 +10,12 @@ import { useCareerPlans } from "@/hooks/use-career-plans";
 import { useCareers } from "@/hooks/use-careers";
 import { AltPlanCard } from "@/features/jalur/alt-plan-card";
 import { PrimaryPlanCard } from "@/features/jalur/primary-plan-card";
+import type { CareerId } from "@/types";
 
 export function PlansOverview() {
   const { plans, ready, canAdd, setPrimary } = useCareerPlans();
   const { getCareer, ready: careersReady } = useCareers();
+  const [pendingId, setPendingId] = useState<CareerId | null>(null);
 
   if (!ready || !careersReady) return <Skeleton className="h-56 w-full rounded-2xl" />;
 
@@ -34,9 +37,16 @@ export function PlansOverview() {
   const [primary, ...alternatives] = plans;
   const primaryCareer = getCareer(primary.idKarier);
 
-  function makePrimary(id: (typeof plans)[number]["idKarier"]) {
-    setPrimary(id);
-    toast.success(`${getCareer(id)?.nama} sekarang jadi jalur utama`);
+  async function makePrimary(id: CareerId) {
+    setPendingId(id);
+    try {
+      await setPrimary(id);
+      toast.success(`${getCareer(id)?.nama} sekarang jadi jalur utama`);
+    } catch {
+      toast.error("Gagal menjadikan jalur utama.");
+    } finally {
+      setPendingId(null);
+    }
   }
 
   return (
@@ -46,7 +56,15 @@ export function PlansOverview() {
         {alternatives.map((plan) => {
           const career = getCareer(plan.idKarier);
           if (!career) return null;
-          return <AltPlanCard key={plan.idKarier} plan={plan} career={career} onMakePrimary={() => makePrimary(plan.idKarier)} />;
+          return (
+            <AltPlanCard
+              key={plan.idKarier}
+              plan={plan}
+              career={career}
+              onMakePrimary={() => makePrimary(plan.idKarier)}
+              isMakingPrimary={pendingId === plan.idKarier}
+            />
+          );
         })}
         {canAdd && (
           <Link

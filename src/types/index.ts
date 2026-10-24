@@ -52,6 +52,9 @@ export interface RoadmapStep {
   skill: string;
   aktivitas: string;
   estimasiMinggu: number;
+  videoUrl?: string;
+  videoTitle?: string;
+  sertifikatUrl?: string | null;
 }
 
 export interface PortfolioProject {

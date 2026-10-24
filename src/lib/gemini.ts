@@ -17,6 +17,8 @@ const RESPONSE_SCHEMA = {
           skill: { type: "STRING" },
           aktivitas: { type: "STRING" },
           estimasiMinggu: { type: "INTEGER" },
+          videoTitle: { type: "STRING" },
+          videoUrl: { type: "STRING" },
         },
         required: ["urutan", "skill", "aktivitas", "estimasiMinggu"],
       },
@@ -55,7 +57,7 @@ ${gapList || "- (tidak ada gap signifikan)"}
 
 Tugasmu, dalam Bahasa Indonesia yang ringkas dan memotivasi:
 1. "penjelasan": 2 paragraf pendek (maks 2 kalimat tiap paragraf) yang menjelaskan mengapa peran ini cocok dan apa fokus belajar utamanya. Jangan sebut kata "SAW" atau istilah teknis algoritma.
-2. "roadmap": urutan belajar untuk tiap skill gap di atas (urutan dimulai dari 1, mengikuti prioritas yang diberikan), masing-masing dengan "aktivitas" konkret (1 kalimat) dan "estimasiMinggu" yang realistis (1-8 minggu per skill).
+2. "roadmap": urutan belajar untuk tiap skill gap di atas (urutan dimulai dari 1, mengikuti prioritas yang diberikan), masing-masing dengan "aktivitas" konkret (1 kalimat), "estimasiMinggu" yang realistis (1-8 minggu per skill), serta "videoTitle" dan "videoUrl" yang mengarah ke video YouTube yang relevan untuk belajar skill tersebut (boleh berupa URL pencarian YouTube jika tidak yakin video spesifik, mis. https://www.youtube.com/results?search_query=... dengan kata kunci yang relevan).
 3. "proyekPortofolio": 2 ide proyek portofolio kecil yang relevan, masing-masing dengan "judul" singkat dan "skillTerkait" (nama-nama skill dari daftar gap yang dipakai).
 
 Balas HANYA dengan JSON sesuai skema yang diberikan.`;
