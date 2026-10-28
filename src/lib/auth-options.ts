@@ -18,7 +18,8 @@ export const authOptions: NextAuthOptions = {
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) return null;
 
-        const user = await prisma.user.findUnique({ where: { email: credentials.email } });
+        // Register menyimpan email huruf kecil, jadi login dinormalkan agar tidak bergantung collation database.
+        const user = await prisma.user.findUnique({ where: { email: credentials.email.trim().toLowerCase() } });
         if (!user) return null;
 
         const valid = await bcrypt.compare(credentials.password, user.passwordHash);

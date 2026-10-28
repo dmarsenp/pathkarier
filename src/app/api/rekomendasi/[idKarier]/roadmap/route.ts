@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth-options";
 import { generateAiRoadmap, RecommendationPrerequisiteError } from "@/lib/recommendation";
 
+// Rantai AI bisa mencoba beberapa model (anggaran total 50 detik, lihat LLM_TOTAL_BUDGET_MS).
+export const maxDuration = 60;
+
 interface RouteParams {
   params: { idKarier: string };
 }

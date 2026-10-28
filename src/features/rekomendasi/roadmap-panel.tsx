@@ -23,25 +23,36 @@ export function RoadmapPanel({ idKarier, careerName, roadmap: initialRoadmap, ai
   const [state, setState] = useState<PanelState>(initialAiGenerated ? "done" : "idle");
   const [roadmap, setRoadmap] = useState(initialRoadmap);
   const [aiGenerated, setAiGenerated] = useState(initialAiGenerated);
+  const [slow, setSlow] = useState(false);
 
   // FR-14/FR-15: minta Generative AI menyusun penjelasan & roadmap. NFR-06: tetap tampilkan
   // versi dasar bila API gagal, disertai pesan bahwa penjelasan AI tidak tersedia sementara.
   async function generate() {
     setState("loading");
-    const res = await fetch(`/api/rekomendasi/${idKarier}/roadmap`, { method: "POST" });
-    const data = await res.json().catch(() => ({}));
+    setSlow(false);
+    const slowTimer = setTimeout(() => setSlow(true), 10_000);
+    const fallbackState = aiGenerated || roadmap.roadmap.length > 0 ? "done" : "idle";
+    try {
+      const res = await fetch(`/api/rekomendasi/${idKarier}/roadmap`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
 
-    if (!res.ok) {
-      toast.error("Gagal membuat roadmap. Coba lagi.");
-      setState(aiGenerated || roadmap.roadmap.length > 0 ? "done" : "idle");
-      return;
-    }
+      if (!res.ok) {
+        toast.error("Gagal membuat roadmap. Coba lagi.");
+        setState(fallbackState);
+        return;
+      }
 
-    setRoadmap(data.roadmap);
-    setAiGenerated(data.aiGenerated);
-    setState("done");
-    if (!data.aiGenerated) {
-      toast.warning("Penjelasan AI tidak tersedia sementara. Menampilkan versi dasar.");
+      setRoadmap(data.roadmap);
+      setAiGenerated(data.aiGenerated);
+      setState("done");
+      if (!data.aiGenerated) {
+        toast.warning("Semua layanan AI sedang sibuk. Menampilkan versi dasar, coba lagi beberapa saat lagi.");
+      }
+    } catch {
+      toast.error("Koneksi bermasalah. Periksa internetmu lalu coba lagi.");
+      setState(fallbackState);
+    } finally {
+      clearTimeout(slowTimer);
     }
   }
 
@@ -79,7 +90,7 @@ export function RoadmapPanel({ idKarier, careerName, roadmap: initialRoadmap, ai
             </Button>
           </div>
         )}
-        {state === "loading" && <RoadmapLoading />}
+        {state === "loading" && <RoadmapLoading slow={slow} />}
         {state === "done" && (
           <div className="space-y-8">
             {!aiGenerated && (

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { skillGaps } from "@/lib/engine/readiness";
 import { topContributors } from "@/lib/engine/riasec";
 import { rankCareers, type SawWeights } from "@/lib/engine/saw";
-import { generateRoadmapWithGemini } from "@/lib/gemini";
+import { generateRoadmapWithFallback } from "@/lib/llm/generate-roadmap";
 import { buildMockRoadmap } from "@/lib/mock-roadmap";
 import type { AiRoadmap, Career, Recommendation, RiasecDim, RiasecScores, SkillGap, UserSkill } from "@/types";
 import type { Prisma } from "@prisma/client";
@@ -159,15 +159,15 @@ export async function generateAiRoadmap(userId: string, idKarier: string): Promi
   if (!resolved) return null;
   const { career, result, gaps } = resolved;
 
-  const aiResult = await generateRoadmapWithGemini({
+  const generated = await generateRoadmapWithFallback({
     careerName: career.nama,
     riasecFitPercent: Math.round(result.skorRiasec * 100),
     skillReadinessPercent: Math.round(result.skorSkill * 100),
     gaps,
   });
 
-  const roadmap = aiResult ?? buildMockRoadmap(career.nama, gaps);
-  const aiGenerated = aiResult !== null;
+  const roadmap = generated?.roadmap ?? buildMockRoadmap(career.nama, gaps);
+  const aiGenerated = generated !== null;
 
   const recRow = await prisma.recommendation.findUnique({
     where: { userId_careerId: { userId, careerId: career.id } },
