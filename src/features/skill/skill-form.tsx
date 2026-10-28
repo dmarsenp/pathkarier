@@ -6,7 +6,7 @@ import { ArrowRight, Layers } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import type { SkillGroup } from "@/constants/careers";
+import type { SkillGroup } from "@/types";
 import { SelectedSkillRow } from "@/features/skill/selected-skill-row";
 import { SkillSearch } from "@/features/skill/skill-search";
 import type { SkillLevel, UserSkill } from "@/types";

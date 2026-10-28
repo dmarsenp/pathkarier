@@ -1,6 +1,6 @@
 import type { RiasecDim } from "@/types";
 
-export interface RiasecMeta {
+interface RiasecMeta {
   key: RiasecDim;
   nama: string;
   ringkas: string;

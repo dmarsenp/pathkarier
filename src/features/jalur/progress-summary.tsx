@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { RiasecRadar } from "@/components/charts/riasec-radar";
+import { RiasecRadarLazy } from "@/components/charts/riasec-radar-lazy";
 import { RIASEC_META, RIASEC_ORDER } from "@/constants/riasec";
 import { useAssessment } from "@/hooks/use-assessment";
 import { useCareerPlans } from "@/hooks/use-career-plans";
@@ -51,7 +51,7 @@ export function ProgressSummary() {
         </CardHeader>
         <CardContent>
           {result ? (
-            <RiasecRadar
+            <RiasecRadarLazy
               labels={RIASEC_ORDER.map((d) => RIASEC_META[d].nama)}
               values={RIASEC_ORDER.map((d) => result.scores[d])}
               config={{ max: 5, seriesLabel: "Skor" }}

@@ -9,7 +9,7 @@ import { MatchReasonCard } from "@/features/rekomendasi/match-reason-card";
 import { RecommendationBlockerCard } from "@/features/rekomendasi/recommendation-blocker";
 import { RoadmapPanel } from "@/features/rekomendasi/roadmap-panel";
 import { SkillGapCard } from "@/features/rekomendasi/skill-gap-card";
-import { ResourceExplorer } from "@/features/sumber-belajar/resource-explorer";
+import { ResourceExplorer } from "@/components/learning/resource-explorer";
 import { authOptions } from "@/lib/auth-options";
 import { prisma } from "@/lib/prisma";
 import { getCareerDetail, RecommendationPrerequisiteError } from "@/lib/recommendation";

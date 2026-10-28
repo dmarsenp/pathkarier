@@ -1,5 +1,5 @@
-// SPEC 7.5 / KEPUTUSAN #8: URL tidak boleh berasal dari LLM. Tautan video dibuat server dari nama skill
-// berupa pencarian YouTube, jadi tidak pernah mengarah ke video karangan.
+// URL video tidak boleh berasal dari AI. Tautan dibuat server dari nama skill berupa pencarian YouTube,
+// sehingga tidak pernah mengarah ke video karangan.
 export function videoLinkFor(skill: string): { videoTitle: string; videoUrl: string } {
   return {
     videoTitle: `Tutorial ${skill} di YouTube`,

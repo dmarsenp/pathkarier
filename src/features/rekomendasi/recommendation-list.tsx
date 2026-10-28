@@ -4,7 +4,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { enterStagger } from "@/lib/motion";
 import { useCareers } from "@/hooks/use-careers";
 import { useRecommendations } from "@/hooks/use-recommendations";
-import { PlanBadge } from "@/features/jalur/plan-badge";
+import { PlanBadge } from "@/components/plan/plan-badge";
 import { CareerRankCard } from "@/features/rekomendasi/career-rank-card";
 import { RecommendationBlockerCard } from "@/features/rekomendasi/recommendation-blocker";
 

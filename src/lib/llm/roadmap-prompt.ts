@@ -1,6 +1,6 @@
 import type { LlmRoadmapInput } from "@/lib/llm/types";
 
-// SPEC 7.7: AI hanya menyusun penjelasan & roadmap setelah peringkat SAW ditentukan.
+// AI hanya menyusun penjelasan dan roadmap setelah peringkat SAW ditentukan.
 export const SYSTEM_PROMPT = [
   "Kamu penasihat karier TI yang menyusun penjelasan dan roadmap belajar berbahasa Indonesia.",
   "Peringkat karier sudah ditentukan sistem lain: jangan membuat peringkat, menilai ulang peran, atau menyebut peran lain.",

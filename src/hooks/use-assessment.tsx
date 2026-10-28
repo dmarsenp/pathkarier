@@ -3,7 +3,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { Question, RiasecScores } from "@/types";
 
-export interface AssessmentResult {
+interface AssessmentResult {
   scores: RiasecScores;
   selesaiPada: string;
 }

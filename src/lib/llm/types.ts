@@ -7,7 +7,7 @@ export interface LlmRoadmapInput {
   gaps: SkillGap[];
 }
 
-// SPEC 7.2: antarmuka penyedia LLM agar Gemini/Groq/OpenAI dapat ditukar lewat env.
+// Antarmuka penyedia LLM agar Gemini, Groq, atau OpenAI dapat ditukar lewat env.
 export interface LlmGenerateInput {
   system: string;
   user: string;

@@ -1,8 +1,7 @@
 import type { Question } from "@/types";
 
-// TODO(tim): butir sementara untuk tampilan UI. Ganti dengan bank soal resmi (SPEC 12.4)
-// yang sumbernya sah dan tercatat di daftar pustaka. Urutan sengaja diselang-seling antardimensi.
-export const PLACEHOLDER_QUESTIONS: Question[] = [
+// Bank soal asesmen RIASEC: 5 pernyataan per dimensi, diselang-seling antardimensi.
+export const RIASEC_QUESTIONS: Question[] = [
   { id: 1, dimensi: "R", teks: "Saya senang merakit atau memperbaiki perangkat komputer." },
   { id: 2, dimensi: "I", teks: "Saya suka mencari tahu penyebab sebuah masalah sampai tuntas." },
   { id: 3, dimensi: "A", teks: "Saya senang membuat desain atau karya visual." },

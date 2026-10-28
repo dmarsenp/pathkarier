@@ -6,11 +6,11 @@ const ACTIVITIES = [
   "Ikuti satu kursus singkat dan catat poin penting di catatan belajar.",
   "Terapkan di proyek kecil, lalu minta teman atau mentor meninjau hasilnya.",
   "Bangun satu fitur utuh yang memakai skill ini dari awal sampai selesai.",
-  "Rangkum yang kamu pelajari dalam satu tulisan singkat atau README.",
+  "Rangkum yang kamu pelajari dalam satu tulisan singkat sebagai dokumentasi proyek.",
 ];
 
-// Contoh keluaran untuk tampilan UI. TODO: ganti dengan POST /api/rekomendasi/{idKarier}/roadmap (SPEC 7).
-export function buildMockRoadmap(careerName: string, gaps: SkillGap[]): AiRoadmap {
+// Roadmap dasar yang disusun dari skill gap tanpa AI, dipakai saat penyedia AI gagal atau belum dipanggil.
+export function buildBaseRoadmap(careerName: string, gaps: SkillGap[]): AiRoadmap {
   const top = gaps.slice(0, 2).map((g) => g.nama);
   return {
     penjelasan: [

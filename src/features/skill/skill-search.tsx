@@ -2,7 +2,7 @@
 
 import { Plus } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import type { SkillGroup } from "@/constants/careers";
+import type { SkillGroup } from "@/types";
 
 interface SkillSearchProps {
   groups: SkillGroup[];

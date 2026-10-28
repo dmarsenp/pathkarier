@@ -2,11 +2,11 @@ import type { CareerSkill, SkillGap, SkillLevel, UserSkill } from "@/types";
 
 const LEVEL_VALUE: Record<SkillLevel, number> = { belum: 0, dasar: 0.5, mahir: 1 };
 
-export function levelOf(nama: string, userSkills: UserSkill[]): SkillLevel {
+function levelOf(nama: string, userSkills: UserSkill[]): SkillLevel {
   return userSkills.find((s) => s.nama === nama)?.level ?? "belum";
 }
 
-// SPEC 6.3: skill_gap_k = b_k × (1 − h_k), urut menurun, ambil top K.
+// Skill gap = bobot × (1 − penguasaan), diurutkan menurun dan dipotong sebanyak topK.
 export function skillGaps(careerSkills: CareerSkill[], userSkills: UserSkill[], topK = 5): SkillGap[] {
   return careerSkills
     .map((skill) => {
@@ -18,7 +18,7 @@ export function skillGaps(careerSkills: CareerSkill[], userSkills: UserSkill[], 
     .slice(0, topK);
 }
 
-// Persamaan Bab 3.3.2.2.3 / SPEC 6.2: skor kesiapan skill = Σ(bobot × penguasaan) / Σbobot.
+// Skor kesiapan skill = Σ(bobot × penguasaan) / Σbobot.
 export function skillReadinessScore(careerSkills: CareerSkill[], userSkills: UserSkill[]): number {
   let weightedSum = 0;
   let totalWeight = 0;

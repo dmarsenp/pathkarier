@@ -1,9 +1,5 @@
 import { prisma } from "@/lib/prisma";
-
-export interface SkillGroup {
-  karier: string;
-  skills: string[];
-}
+import type { SkillGroup } from "@/types";
 
 // Master skill dikelompokkan per karier (skill yang sama hanya muncul sekali), dari basis data (FR-19).
 export async function getSkillGroupsFromDb(): Promise<SkillGroup[]> {

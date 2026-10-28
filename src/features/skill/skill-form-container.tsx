@@ -1,7 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
-import type { SkillGroup } from "@/constants/careers";
+import type { SkillGroup } from "@/types";
 import { SkillForm } from "@/features/skill/skill-form";
 import { useUserSkills } from "@/hooks/use-user-skills";
 

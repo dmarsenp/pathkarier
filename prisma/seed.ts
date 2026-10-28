@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { CAREERS } from "../src/constants/careers";
-import { PLACEHOLDER_QUESTIONS } from "../src/constants/questions";
+import { RIASEC_QUESTIONS } from "../src/constants/questions";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +13,7 @@ async function main() {
   });
 
   // Bank soal asesmen RIASEC (FR-21).
-  for (const q of PLACEHOLDER_QUESTIONS) {
+  for (const q of RIASEC_QUESTIONS) {
     await prisma.riasecQuestion.upsert({
       where: { id: q.id },
       update: { dimensi: q.dimensi, teks: q.teks, urutan: q.id },
@@ -69,7 +69,7 @@ async function main() {
 
   const skillCount = await prisma.skill.count();
   console.log(
-    `Seed selesai: ${CAREERS.length} karier, ${skillCount} skill unik, ${PLACEHOLDER_QUESTIONS.length} soal asesmen, 1 bobot kriteria.`,
+    `Seed selesai: ${CAREERS.length} karier, ${skillCount} skill unik, ${RIASEC_QUESTIONS.length} soal asesmen, 1 bobot kriteria.`,
   );
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { ResourceExplorer } from "@/features/sumber-belajar/resource-explorer";
+import { ResourceExplorer } from "@/components/learning/resource-explorer";
 import { useCareerPlans } from "@/hooks/use-career-plans";
 import { useCareers } from "@/hooks/use-careers";
 import { useRecommendations } from "@/hooks/use-recommendations";

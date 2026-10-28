@@ -1,8 +1,6 @@
 import type { Career } from "@/types";
 
-// Skill & bobot: SPEC 12.5 (hasil survei praktisi).
-// Profil RIASEC: fixture uji SPEC 12.3, BUKAN data O*NET. TODO(tim): ganti dengan data O*NET.
-// Deskripsi & tanggung jawab: teks sementara. TODO(tim): ganti dengan deskripsi final dari seed.
+// Data awal 5 karier: profil RIASEC (skala 1-7, urutan R, I, A, S, E, C) dan bobot tiap skill hasil survei praktisi.
 export const CAREERS: Career[] = [
   {
     id: "frontend",
@@ -135,22 +133,3 @@ export const CAREERS: Career[] = [
     ],
   },
 ];
-
-export function getCareer(id: string): Career | undefined {
-  return CAREERS.find((career) => career.id === id);
-}
-
-export interface SkillGroup {
-  karier: string;
-  skills: string[];
-}
-
-// Master skill dikelompokkan per peran untuk pencarian (skill yang sama hanya muncul sekali).
-export function getSkillGroups(): SkillGroup[] {
-  const seen = new Set<string>();
-  return CAREERS.map((career) => {
-    const skills = career.skills.map((s) => s.nama).filter((nama) => !seen.has(nama));
-    skills.forEach((nama) => seen.add(nama));
-    return { karier: career.nama, skills };
-  });
-}

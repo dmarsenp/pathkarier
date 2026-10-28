@@ -6,6 +6,11 @@ export type UserStatus = "mahasiswa_akhir" | "lulusan_baru" | "career_switcher";
 
 export type CareerId = "frontend" | "backend" | "data-analyst" | "ui-ux" | "qa";
 
+export interface SkillGroup {
+  karier: string;
+  skills: string[];
+}
+
 export interface CareerSkill {
   nama: string;
   bobot: number;

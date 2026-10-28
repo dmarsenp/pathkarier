@@ -19,9 +19,9 @@ function stripCodeFence(raw: string): string {
   return raw.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
 }
 
-export interface ValidatedRoadmap {
+interface ValidatedRoadmap {
   roadmap: AiRoadmap;
-  // Irisan skill roadmap dengan skill gap, dibagi jumlah skill gap (SPEC 7.6).
+  // Irisan skill roadmap dengan skill gap, dibagi jumlah skill gap.
   coverage: number;
 }
 

@@ -1,7 +1,7 @@
 import { RIASEC_ORDER } from "@/constants/riasec";
 import type { Question, RiasecDim, RiasecScores } from "@/types";
 
-// Persamaan Bab 3.3.2.2.2 / SPEC 6.1: kecocokan minat = cosine similarity antara vektor
+// Kecocokan minat = cosine similarity antara vektor
 // RIASEC pengguna dan profil RIASEC karier.
 export function riasecFitScore(user: RiasecScores, career: RiasecScores): number {
   const dot = RIASEC_ORDER.reduce((sum, dim) => sum + user[dim] * career[dim], 0);
@@ -25,14 +25,14 @@ export function scoreAssessment(questions: Question[], answers: Record<number, n
   ) as RiasecScores;
 }
 
-// Top N dimensi; seri diurut R, I, A, S, E, C (SPEC 5, tambahan UI).
+// Top N dimensi dengan skor tertinggi; bila seri, urutan R, I, A, S, E, C.
 export function topCode(scores: RiasecScores, n = 3): RiasecDim[] {
   return [...RIASEC_ORDER]
     .sort((a, b) => scores[b] - scores[a] || RIASEC_ORDER.indexOf(a) - RIASEC_ORDER.indexOf(b))
     .slice(0, n);
 }
 
-// SPEC 6.6: dimensi dengan kontribusi terbesar terhadap u · c.
+// Dimensi dengan kontribusi terbesar pada perkalian titik vektor pengguna dan karier.
 export function topContributors(user: RiasecScores, career: RiasecScores, n = 2): RiasecDim[] {
   return [...RIASEC_ORDER].sort((a, b) => user[b] * career[b] - user[a] * career[a]).slice(0, n);
 }

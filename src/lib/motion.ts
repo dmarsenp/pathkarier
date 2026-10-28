@@ -11,7 +11,7 @@ const STAGGER_DELAYS = [
   "[animation-delay:420ms]",
 ];
 
-export const ENTER = "animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both";
+const ENTER = "animate-in fade-in slide-in-from-bottom-2 duration-500 fill-mode-both";
 
 // Item daftar masuk satu per satu: item ke-n muncul sedikit setelah item sebelumnya.
 export function enterStagger(index: number): string {

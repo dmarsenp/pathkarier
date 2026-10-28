@@ -4,7 +4,7 @@ import { validateRoadmap } from "@/lib/llm/roadmap-validate";
 import type { LlmRoadmapInput } from "@/lib/llm/types";
 import type { AiRoadmap } from "@/types";
 
-export interface RoadmapGeneration {
+interface RoadmapGeneration {
   roadmap: AiRoadmap;
   provider: string;
   model: string;

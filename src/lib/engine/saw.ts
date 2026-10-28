@@ -7,7 +7,7 @@ export interface SawWeights {
   skill: number;
 }
 
-// Model perhitungan SAW — Bab 3.3.2.1 (Persamaan 1 & 2) / SPEC 6.4-6.5.
+// Model perhitungan SAW (kedua kriteria bersifat benefit):
 // 1) Susun matriks keputusan (C1 = RIASEC-fit, C2 = kesiapan skill).
 // 2) Normalisasi tiap kolom terhadap nilai maksimumnya (kedua kriteria benefit).
 // 3) Kalikan dengan bobot kriteria & jumlahkan untuk skor akhir V.

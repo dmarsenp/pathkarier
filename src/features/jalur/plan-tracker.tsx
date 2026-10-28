@@ -10,7 +10,7 @@ import { useCareerPlans } from "@/hooks/use-career-plans";
 import { useCareers } from "@/hooks/use-careers";
 import { useUserSkills } from "@/hooks/use-user-skills";
 import { PlanDetail } from "@/features/jalur/plan-detail";
-import { ResourceExplorer } from "@/features/sumber-belajar/resource-explorer";
+import { ResourceExplorer } from "@/components/learning/resource-explorer";
 import { planLabel, planProgress } from "@/lib/plans";
 import { resourcesForCareer } from "@/lib/resources";
 

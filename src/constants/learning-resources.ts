@@ -1,9 +1,8 @@
 import type { LearningResource } from "@/types";
 
-// Seed kurasi sumber belajar (SPEC 7.5, KEPUTUSAN #8): tautan TIDAK berasal dari LLM.
-// Tautan dicek dapat diakses pada Okt 2026; status gratis dicek di halaman penyedia.
-// TODO(tim): verifikasi ulang isi & biaya sebelum UAT, lalu pindahkan ke tabel `sumber_belajar` agar dikelola admin.
-// `skills` wajib sama persis dengan nama di master skill.
+// Daftar sumber belajar terkurasi. Tautan ditulis manual dan tidak dibuat oleh AI.
+// Tautan dan status biaya dicek pada Oktober 2026.
+// Nilai `skills` harus sama persis dengan nama skill di master data.
 export const LEARNING_RESOURCES: LearningResource[] = [
   // ---------- Internasional ----------
   {

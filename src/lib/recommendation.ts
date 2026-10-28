@@ -3,11 +3,11 @@ import { skillGaps } from "@/lib/engine/readiness";
 import { topContributors } from "@/lib/engine/riasec";
 import { rankCareers, type SawWeights } from "@/lib/engine/saw";
 import { generateRoadmapWithFallback } from "@/lib/llm/generate-roadmap";
-import { buildMockRoadmap } from "@/lib/mock-roadmap";
+import { buildBaseRoadmap } from "@/lib/base-roadmap";
 import type { AiRoadmap, Career, Recommendation, RiasecDim, RiasecScores, SkillGap, UserSkill } from "@/types";
 import type { Prisma } from "@prisma/client";
 
-export type PrerequisiteReason = "no-assessment" | "no-skill";
+type PrerequisiteReason = "no-assessment" | "no-skill";
 
 export class RecommendationPrerequisiteError extends Error {
   constructor(public reason: PrerequisiteReason) {
@@ -83,7 +83,7 @@ export async function computeAndSaveRecommendations(userId: string): Promise<Com
   return { recommendations, userRiasec, userSkills, careers, weights };
 }
 
-export interface CareerDetail {
+interface CareerDetail {
   career: Career;
   result: Recommendation;
   gaps: SkillGap[];
@@ -131,7 +131,7 @@ export async function getCareerDetail(userId: string, idKarier: string): Promise
     return { career, result, gaps, dims, roadmap, aiGenerated: existing.aiGenerated, userSkills, weights };
   }
 
-  const roadmap = buildMockRoadmap(career.nama, gaps);
+  const roadmap = buildBaseRoadmap(career.nama, gaps);
   if (recRow) {
     await prisma.roadmap.create({
       data: {
@@ -147,7 +147,7 @@ export async function getCareerDetail(userId: string, idKarier: string): Promise
   return { career, result, gaps, dims, roadmap, aiGenerated: false, userSkills, weights };
 }
 
-export interface GeneratedRoadmap {
+interface GeneratedRoadmap {
   roadmap: AiRoadmap;
   aiGenerated: boolean;
 }
@@ -166,7 +166,7 @@ export async function generateAiRoadmap(userId: string, idKarier: string): Promi
     gaps,
   });
 
-  const roadmap = generated?.roadmap ?? buildMockRoadmap(career.nama, gaps);
+  const roadmap = generated?.roadmap ?? buildBaseRoadmap(career.nama, gaps);
   const aiGenerated = generated !== null;
 
   const recRow = await prisma.recommendation.findUnique({

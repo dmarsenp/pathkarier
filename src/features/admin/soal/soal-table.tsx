@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { SoalFormDialog } from "@/features/admin/soal/soal-form-dialog";
 import type { RiasecDim } from "@/types";
 
-export interface SoalRow {
+interface SoalRow {
   id: number;
   teks: string;
   dimensi: RiasecDim;

@@ -97,7 +97,7 @@ export function RegisterForm() {
           <FormField id="confirm" label="Ulangi password" error={errors.confirm}>
             <PasswordInput id="confirm" name="confirm" autoComplete="new-password" aria-invalid={Boolean(errors.confirm)} />
           </FormField>
-          {/* KEPUTUSAN #10: persetujuan data penelitian saat registrasi */}
+          {/* Persetujuan penggunaan data untuk penelitian dan uji kegunaan */}
           <div className="space-y-1.5 rounded-lg border bg-muted/50 p-3">
             <div className="flex items-start gap-3">
               <Checkbox id="consent" checked={consent} onCheckedChange={(v) => setConsent(v === true)} className="mt-0.5" />
