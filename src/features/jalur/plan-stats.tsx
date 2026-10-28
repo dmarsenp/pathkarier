@@ -30,7 +30,7 @@ export function PlanStats({ plan, progress }: PlanStatsProps) {
           <div key={stat.label} className="rounded-xl bg-muted/50 p-3">
             <dt className="text-xs text-muted-foreground">{stat.label}</dt>
             <dd className="mt-1 font-semibold">{stat.value}</dd>
-            {stat.hint && <dd className="text-[11px] text-muted-foreground">{stat.hint}</dd>}
+            {stat.hint && <dd className="text-xs text-muted-foreground">{stat.hint}</dd>}
           </div>
         ))}
       </dl>

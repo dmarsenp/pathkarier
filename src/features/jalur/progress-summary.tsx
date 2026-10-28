@@ -28,7 +28,7 @@ export function ProgressSummary() {
   const { getCareer, ready: careersReady } = useCareers();
 
   const ready = assessmentReady && skillsReady && recommendationsReady && plansReady && careersReady;
-  if (!ready) return <Skeleton className="h-64 w-full rounded-2xl" />;
+  if (!ready) return <Skeleton className="h-[46rem] w-full rounded-2xl lg:h-72" />;
 
   const top = recommendations[0];
   const topCareer = top ? getCareer(top.idKarier) : undefined;

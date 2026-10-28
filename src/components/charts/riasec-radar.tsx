@@ -15,7 +15,7 @@ export function RiasecRadar({ labels, values, config }: RiasecRadarProps) {
 
   return (
     <ChartContainer config={chartConfig} className="mx-auto aspect-square w-full max-w-sm">
-      <RadarChart data={data} outerRadius="64%">
+      <RadarChart data={data} outerRadius="62%" margin={{ top: 20, right: 44, bottom: 20, left: 44 }}>
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
         <PolarGrid className="stroke-border" />
         <PolarAngleAxis dataKey="dimensi" tick={{ fontSize: 12, fontWeight: 600 }} />

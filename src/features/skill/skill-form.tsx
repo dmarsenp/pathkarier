@@ -66,7 +66,7 @@ export function SkillForm({ groups, initial, onSave }: SkillFormProps) {
       </Card>
 
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="font-semibold">Skill dipilih ({skills.length})</h2>
           <Button onClick={handleSave} disabled={skills.length === 0} isLoading={saving} loadingText="Menyimpan...">
             Simpan & lihat rekomendasi <ArrowRight />

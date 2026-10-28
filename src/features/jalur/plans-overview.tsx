@@ -17,7 +17,7 @@ export function PlansOverview() {
   const { getCareer, ready: careersReady } = useCareers();
   const [pendingId, setPendingId] = useState<CareerId | null>(null);
 
-  if (!ready || !careersReady) return <Skeleton className="h-56 w-full rounded-2xl" />;
+  if (!ready || !careersReady) return <Skeleton className="h-[34rem] w-full rounded-2xl md:h-[27rem]" />;
 
   if (plans.length === 0) {
     return (

@@ -65,6 +65,7 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
+      <h1 className="sr-only">Tes minat RIASEC</h1>
       <Card className="sticky top-20 z-30 rounded-2xl shadow-sm">
         <CardContent className="space-y-3 p-4 md:p-5">
           <div className="flex items-center justify-between text-sm">
@@ -97,10 +98,10 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
       </div>
 
       <div className="flex items-center justify-between gap-3">
-        <Button variant="outline" size="lg" onClick={() => goTo(page - 1)} disabled={page === 0}>
+        <Button variant="outline" size="lg" className="flex-1 px-4 sm:flex-none sm:px-8" onClick={() => goTo(page - 1)} disabled={page === 0}>
           <ArrowLeft /> Sebelumnya
         </Button>
-        <Button size="lg" onClick={handleNext} isLoading={submitting} loadingText="Mengirim jawaban...">
+        <Button size="lg" className="flex-1 px-4 sm:flex-none sm:px-8" onClick={handleNext} isLoading={submitting} loadingText="Mengirim jawaban...">
           {isLastPage ? "Lihat hasil" : "Berikutnya"} <ArrowRight />
         </Button>
       </div>

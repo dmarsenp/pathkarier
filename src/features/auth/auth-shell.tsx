@@ -21,7 +21,6 @@ export function AuthShell({ children }: AuthShellProps) {
             alt="Ilustrasi dua mahasiswa yang siap menemukan arah kariernya"
             width={711}
             height={474}
-            priority
             className="mx-auto w-full max-w-[44vw] -translate-y-[2vh] animate-in fade-in slide-in-from-left-8 duration-700 fill-mode-both"
           />
         </div>

@@ -119,7 +119,7 @@ export function RegisterForm() {
       </form>
       <p className="text-center text-sm text-muted-foreground">
         Sudah punya akun?{" "}
-        <Link href="/login" className="font-semibold text-primary hover:underline">
+        <Link href="/login" className="inline-block py-1.5 font-semibold text-primary hover:underline">
           Masuk
         </Link>
       </p>

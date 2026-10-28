@@ -13,7 +13,7 @@ interface SkillSearchProps {
 export function SkillSearch({ groups, selected, onAdd }: SkillSearchProps) {
   return (
     <Command className="rounded-xl border">
-      <CommandInput placeholder="Cari skill, mis. SQL, Figma, JavaScript…" className="h-12" />
+      <CommandInput placeholder="Cari skill (mis. SQL, Figma)…" className="h-12" />
       <CommandList className="max-h-80">
         <CommandEmpty>Skill tidak ditemukan. Hanya skill dari daftar yang bisa dipilih.</CommandEmpty>
         {groups.map((group) => {

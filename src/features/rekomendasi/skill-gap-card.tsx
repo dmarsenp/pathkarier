@@ -33,7 +33,7 @@ export function SkillGapCard({ gaps }: SkillGapCardProps) {
                   <Badge variant={gap.level === "belum" ? "outline" : "secondary"} className="rounded-full capitalize">
                     {gap.level}
                   </Badge>
-                  <p className="mt-1 text-[11px] text-muted-foreground">bobot {formatDecimal(gap.bobot, 2)}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">bobot {formatDecimal(gap.bobot, 2)}</p>
                 </div>
               </li>
             ))}

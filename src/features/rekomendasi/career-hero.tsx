@@ -23,7 +23,7 @@ export function CareerHero({ career, result, actions }: CareerHeroProps) {
 
   return (
     <div className="space-y-4">
-      <Link href="/rekomendasi" className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground">
+      <Link href="/rekomendasi" className="inline-flex items-center gap-1.5 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground">
         <ArrowLeft className="size-4" /> Semua rekomendasi
       </Link>
       <Card className="flex flex-col gap-6 overflow-hidden rounded-2xl bg-gradient-to-br from-secondary/80 via-card to-card p-6 md:flex-row md:items-center md:p-8">

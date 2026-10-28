@@ -46,17 +46,17 @@ export function CareerRankCard({ career, result, badge }: CareerRankCardProps) {
           <p className="text-sm text-muted-foreground">{career.ringkas}</p>
         </div>
       </div>
-      <dl className="grid flex-1 grid-cols-2 gap-4">
+      <div className="grid flex-1 grid-cols-2 gap-4">
         {metrics.map((metric) => (
           <div key={metric.label} className="space-y-1.5">
             <div className="flex justify-between text-xs">
-              <dt className="text-muted-foreground">{metric.label}</dt>
-              <dd className="font-semibold tabular-nums">{metric.value}%</dd>
+              <span className="text-muted-foreground">{metric.label}</span>
+              <span className="font-semibold tabular-nums">{metric.value}%</span>
             </div>
             <Progress value={metric.value} className="h-1.5" />
           </div>
         ))}
-      </dl>
+      </div>
       <div className="flex items-center justify-between gap-4 md:flex-col md:items-end">
         <p className="text-right">
           <span className="text-3xl font-extrabold tabular-nums text-primary">{toPercent(result.skorSaw)}</span>

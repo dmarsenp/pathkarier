@@ -27,7 +27,7 @@ export function Highlights() {
           <Reveal key={item.title} order={index} className="flex gap-4">
             <Image src={item.icon} alt="" width={56} height={56} className="size-12 shrink-0 md:size-14" />
             <div className="space-y-3">
-              <h3 className="text-lg font-bold leading-snug text-primary md:text-xl">{item.title}</h3>
+              <h2 className="text-lg font-bold leading-snug text-primary md:text-xl">{item.title}</h2>
               <p className="text-sm leading-relaxed text-muted-foreground">{item.body}</p>
             </div>
           </Reveal>

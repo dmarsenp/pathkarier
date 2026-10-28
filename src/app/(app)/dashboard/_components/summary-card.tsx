@@ -14,8 +14,8 @@ export function SummaryCard({ title, href, linkLabel, children }: SummaryCardPro
     <Card className="flex flex-col rounded-2xl transition-[transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:shadow-md">
       <CardContent className="flex flex-1 flex-col gap-4 p-5">
         <p className="text-sm font-medium text-muted-foreground">{title}</p>
-        <div className="flex-1">{children}</div>
-        <Link href={href} className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline">
+        <div className="min-h-36 flex-1">{children}</div>
+        <Link href={href} className="inline-flex items-center gap-1 py-1.5 text-sm font-semibold text-primary hover:underline">
           {linkLabel} <ChevronRight className="size-4" />
         </Link>
       </CardContent>

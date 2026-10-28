@@ -49,11 +49,12 @@ export function PlanTracker({ initialId }: PlanTrackerProps) {
           {plans.map((plan) => (
             <TabsTrigger
               key={plan.idKarier}
+              aria-controls={undefined}
               value={plan.idKarier}
               className="flex-col items-start gap-0.5 rounded-lg px-4 py-2 text-left data-[state=active]:shadow-sm"
             >
               <span className="text-sm font-semibold">{getCareer(plan.idKarier)?.nama}</span>
-              <span className="text-[11px] font-normal text-muted-foreground">
+              <span className="text-xs font-normal text-muted-foreground">
                 {planLabel(plan.prioritas)} · {planProgress(plan).percent}%
               </span>
             </TabsTrigger>

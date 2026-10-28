@@ -35,7 +35,7 @@ export function AdminSidebar() {
         <span className="text-lg font-bold text-white">PathKarier</span>
       </div>
       <nav className="flex-1 space-y-1 px-3">
-        <p className="px-2 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wide text-slate-500">Kelola Data</p>
+        <p className="px-2 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-slate-500">Kelola Data</p>
         {NAV.map((item) => {
           const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
           return (

@@ -67,7 +67,7 @@ export function LoginForm() {
                 Ingat saya
               </Label>
             </div>
-            <Link href="#" className="text-sm font-medium text-blue-600 hover:underline">
+            <Link href="#" className="inline-block py-1.5 text-sm font-medium text-blue-600 hover:underline">
               Lupa password?
             </Link>
           </div>
@@ -79,7 +79,7 @@ export function LoginForm() {
       </form>
       <p className="text-center text-sm text-muted-foreground">
         Belum punya akun?{" "}
-        <Link href="/register" className="font-semibold text-primary hover:underline">
+        <Link href="/register" className="inline-block py-1.5 font-semibold text-primary hover:underline">
           Daftar sekarang
         </Link>
       </p>

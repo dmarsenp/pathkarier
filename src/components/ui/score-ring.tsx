@@ -31,7 +31,7 @@ export function ScoreRing({ value, size = "lg", label = "cocok" }: ScoreRingProp
       </svg>
       <div className="absolute text-center">
         <p className={cn("font-bold leading-none text-foreground", size === "lg" ? "text-3xl" : "text-lg")}>{clamped}%</p>
-        <p className={cn("mt-1 text-muted-foreground", size === "lg" ? "text-xs" : "text-[10px]")}>{label}</p>
+        <p className={cn("mt-1 text-muted-foreground", size === "lg" ? "text-xs" : "text-xs")}>{label}</p>
       </div>
     </div>
   );

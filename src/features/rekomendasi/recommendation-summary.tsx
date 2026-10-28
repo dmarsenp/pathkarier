@@ -23,7 +23,7 @@ export function RecommendationSummary() {
     <ol className="space-y-2">
       {recommendations.map((result) => (
         <li key={result.idKarier}>
-          <Link href={`/rekomendasi/${result.idKarier}`} className="flex items-center justify-between gap-2 text-sm hover:text-primary">
+          <Link href={`/rekomendasi/${result.idKarier}`} className="flex items-center justify-between gap-2 py-1.5 text-sm hover:text-primary">
             <span className="truncate">
               <span className="mr-2 text-muted-foreground">#{result.peringkat}</span>
               {getCareer(result.idKarier)?.nama}

@@ -19,7 +19,7 @@ export function PrimaryPlanCard({ plan, career }: PrimaryPlanCardProps) {
       <div className="absolute -right-16 -top-16 size-56 rounded-full bg-white/10" aria-hidden />
       <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-3">
-          <p className="flex items-center gap-2 text-sm font-medium text-primary-foreground/70">
+          <p className="flex items-center gap-2 text-sm font-medium text-primary-foreground/85">
             <Flag className="size-4" /> Jalur utama yang kamu tekuni
           </p>
           <h2 className="text-3xl font-bold">{career.nama}</h2>

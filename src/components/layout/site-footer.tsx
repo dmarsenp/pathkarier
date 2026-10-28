@@ -24,14 +24,14 @@ export function SiteFooter() {
         </div>
         <nav aria-label="Tautan footer" className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/80">
           {FOOTER_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="hover:text-white">
+            <Link key={link.href} href={link.href} className="inline-block py-2 hover:text-white">
               {link.label}
             </Link>
           ))}
         </nav>
       </div>
       <div className="border-t border-white/10">
-        <p className="mx-auto max-w-6xl px-4 py-4 text-xs text-white/50">© 2026 PathKarier. Dibuat untuk penelitian skripsi.</p>
+        <p className="mx-auto max-w-6xl px-4 py-4 text-xs text-white/70">© 2026 PathKarier. Dibuat untuk penelitian skripsi.</p>
       </div>
     </footer>
   );

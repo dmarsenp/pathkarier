@@ -23,7 +23,7 @@ export function LikertQuestion({ question, number, value, invalid, onChange }: L
     <fieldset
       id={groupId}
       className={cn(
-        "scroll-mt-28 space-y-5 rounded-2xl border bg-card p-5 transition-colors md:p-6",
+        "min-w-0 scroll-mt-28 space-y-5 rounded-2xl border bg-card p-4 transition-colors sm:p-5 md:p-6",
         value !== undefined && "border-primary/30",
         invalid && "border-destructive/60 bg-destructive/5",
       )}
@@ -43,7 +43,7 @@ export function LikertQuestion({ question, number, value, invalid, onChange }: L
           <Label
             key={option.value}
             htmlFor={`${groupId}-${option.value}`}
-            className="flex w-14 cursor-pointer flex-col items-center gap-2 text-center transition-transform active:scale-95 sm:w-20"
+            className="flex w-12 cursor-pointer flex-col items-center gap-2 text-center transition-transform active:scale-95 sm:w-20"
           >
             <RadioGroupItem id={`${groupId}-${option.value}`} value={String(option.value)} className="peer sr-only" />
             <span
@@ -52,7 +52,7 @@ export function LikertQuestion({ question, number, value, invalid, onChange }: L
                 CIRCLE_SIZES[i],
               )}
             />
-            <span className="text-[11px] font-normal leading-tight text-muted-foreground sm:text-xs">{option.label}</span>
+            <span className="text-xs font-normal leading-tight text-muted-foreground">{option.label}</span>
           </Label>
         ))}
       </RadioGroup>

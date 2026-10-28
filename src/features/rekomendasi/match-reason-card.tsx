@@ -36,19 +36,19 @@ export function MatchReasonCard({ careerName, dims, result, bobot }: MatchReason
             Minat {dims.map((d) => RIASEC_META[d].nama).join(" dan ")} milikmu paling selaras dengan profil {careerName}.
           </p>
         </div>
-        <dl className="space-y-4">
+        <div className="space-y-4">
           {criteria.map((item) => (
             <div key={item.label} className="space-y-1.5">
               <div className="flex items-baseline justify-between text-sm">
-                <dt>
+                <span>
                   {item.label} <span className="text-xs text-muted-foreground">· bobot {item.weight}%</span>
-                </dt>
-                <dd className="font-semibold tabular-nums">{item.value}%</dd>
+                </span>
+                <span className="font-semibold tabular-nums">{item.value}%</span>
               </div>
               <Progress value={item.value} />
             </div>
           ))}
-        </dl>
+        </div>
       </CardContent>
     </Card>
   );
