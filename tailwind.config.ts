@@ -34,9 +34,18 @@ const config: Config = {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(300%)" },
         },
+        // Tanpa keyframe "to": animasi berakhir di nilai asli elemen (offset/transform yang sudah dihitung).
+        "ring-draw": {
+          from: { strokeDashoffset: "264" },
+        },
+        "bar-grow": {
+          from: { transform: "translateX(-100%)" },
+        },
       },
       animation: {
         "progress-slide": "progress-slide 1.2s ease-in-out infinite",
+        "ring-draw": "ring-draw 1s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "bar-grow": "bar-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) both",
       },
       borderRadius: {
         lg: "var(--radius)",

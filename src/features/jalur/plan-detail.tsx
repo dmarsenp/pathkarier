@@ -68,7 +68,7 @@ export function PlanDetail({ plan, career, resources }: PlanDetailProps) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="animate-in space-y-6 duration-300 fade-in slide-in-from-bottom-2">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <Badge variant={plan.prioritas === 1 ? "default" : "secondary"} className="rounded-full">

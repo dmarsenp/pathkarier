@@ -43,7 +43,7 @@ export function LikertQuestion({ question, number, value, invalid, onChange }: L
           <Label
             key={option.value}
             htmlFor={`${groupId}-${option.value}`}
-            className="flex w-14 cursor-pointer flex-col items-center gap-2 text-center sm:w-20"
+            className="flex w-14 cursor-pointer flex-col items-center gap-2 text-center transition-transform active:scale-95 sm:w-20"
           >
             <RadioGroupItem id={`${groupId}-${option.value}`} value={String(option.value)} className="peer sr-only" />
             <span

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { LikertQuestion } from "@/features/asesmen/likert-question";
+import { cn } from "@/lib/utils";
 import { useAssessment } from "@/hooks/use-assessment";
 import type { Question } from "@/types";
 
@@ -29,6 +30,7 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
   const isLastPage = page === totalPages - 1;
 
   const [submitting, setSubmitting] = useState(false);
+  const [direction, setDirection] = useState<"next" | "prev">("next");
 
   function answer(id: number, value: number) {
     setAnswers((prev) => ({ ...prev, [id]: value }));
@@ -36,6 +38,7 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
 
   function goTo(nextPage: number) {
     setShowErrors(false);
+    setDirection(nextPage > page ? "next" : "prev");
     setPage(nextPage);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -77,7 +80,10 @@ export function AssessmentRunner({ questions, perPage }: AssessmentRunnerProps) 
         </CardContent>
       </Card>
 
-      <div className="space-y-4">
+      <div
+        key={page}
+        className={cn("animate-in space-y-4 duration-300 fade-in", direction === "next" ? "slide-in-from-right-4" : "slide-in-from-left-4")}
+      >
         {pageQuestions.map((question, i) => (
           <LikertQuestion
             key={question.id}

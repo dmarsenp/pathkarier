@@ -6,6 +6,7 @@ import { ResourceCard } from "@/components/learning/resource-card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { enterStagger } from "@/lib/motion";
 import type { RankedResource } from "@/lib/resources";
 import type { ResourceRegion } from "@/types";
 
@@ -60,14 +61,14 @@ export function ResourceExplorer({ items, limit = 6 }: ResourceExplorerProps) {
         </div>
       </div>
       {visible.length === 0 ? (
-        <div className="grid place-items-center gap-2 rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground">
+        <div className="grid animate-in place-items-center gap-2 rounded-xl border border-dashed p-8 text-center text-sm text-muted-foreground duration-300 fade-in zoom-in-95">
           <SearchX className="size-6" />
           Belum ada sumber belajar yang cocok dengan filter ini.
         </div>
       ) : (
-        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {visible.map(({ resource, matched }) => (
-            <li key={resource.id}>
+        <ul key={`${region}-${certifiedOnly}`} className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {visible.map(({ resource, matched }, index) => (
+            <li key={resource.id} className={enterStagger(index)}>
               <ResourceCard resource={resource} matched={matched} />
             </li>
           ))}

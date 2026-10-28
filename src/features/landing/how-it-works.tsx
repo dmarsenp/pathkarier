@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { Reveal } from "@/components/ui/reveal";
 
 const STEPS = [
   {
@@ -29,10 +30,13 @@ const STEPS = [
 export function HowItWorks() {
   return (
     <section id="cara-kerja" className="mx-auto max-w-6xl scroll-mt-20 px-4 py-20 md:py-24">
-      <h2 className="mb-8 text-3xl font-extrabold text-primary md:text-4xl">Bagaimana cara kerjanya?</h2>
+      <Reveal>
+        <h2 className="mb-8 text-3xl font-extrabold text-primary md:text-4xl">Bagaimana cara kerjanya?</h2>
+      </Reveal>
       <ol className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-        {STEPS.map((step) => (
+        {STEPS.map((step, index) => (
           <li key={step.title}>
+            <Reveal order={index} className="h-full">
             <Link
               href={step.href}
               className="group flex h-full flex-col rounded-3xl bg-card p-6 shadow-[0_8px_30px_rgba(16,64,40,0.06)] transition-all hover:-translate-y-1 hover:shadow-[0_12px_36px_rgba(16,64,40,0.12)]"
@@ -46,6 +50,7 @@ export function HowItWorks() {
                 Pelajari sekarang <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
               </span>
             </Link>
+            </Reveal>
           </li>
         ))}
       </ol>

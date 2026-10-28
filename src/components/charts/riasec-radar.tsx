@@ -22,7 +22,7 @@ export function RiasecRadar({ labels, values, config }: RiasecRadarProps) {
         <PolarRadiusAxis domain={[0, config.max]} tick={false} axisLine={false} />
         <Radar
           dataKey="skor"
-          isAnimationActive={false}
+          animationDuration={900}
           fill="var(--color-skor)"
           fillOpacity={0.25}
           stroke="var(--color-skor)"

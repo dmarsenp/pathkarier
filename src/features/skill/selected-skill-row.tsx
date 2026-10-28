@@ -19,7 +19,7 @@ interface SelectedSkillRowProps {
 
 export function SelectedSkillRow({ skill, onLevelChange, onRemove }: SelectedSkillRowProps) {
   return (
-    <li className="flex flex-col gap-3 rounded-xl border bg-card p-3 pl-4 sm:flex-row sm:items-center sm:justify-between">
+    <li className="flex animate-in flex-col gap-3 rounded-xl border bg-card p-3 pl-4 duration-300 fade-in slide-in-from-top-2 sm:flex-row sm:items-center sm:justify-between">
       <p className="text-sm font-medium">{skill.nama}</p>
       <div className="flex items-center justify-between gap-2">
         <ToggleGroup

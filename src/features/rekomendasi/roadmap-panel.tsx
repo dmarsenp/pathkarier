@@ -79,7 +79,7 @@ export function RoadmapPanel({ idKarier, careerName, roadmap: initialRoadmap, ai
           )}
         </div>
       </CardHeader>
-      <CardContent className="p-6">
+      <CardContent key={state} className="animate-in p-6 duration-500 fade-in slide-in-from-bottom-2">
         {state === "idle" && (
           <div className="flex flex-col items-center gap-4 py-6 text-center">
             <p className="max-w-md text-sm text-muted-foreground">

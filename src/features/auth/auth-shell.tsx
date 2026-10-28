@@ -22,10 +22,10 @@ export function AuthShell({ children }: AuthShellProps) {
             width={711}
             height={474}
             priority
-            className="mx-auto w-full max-w-[44vw] -translate-y-[2vh]"
+            className="mx-auto w-full max-w-[44vw] -translate-y-[2vh] animate-in fade-in slide-in-from-left-8 duration-700 fill-mode-both"
           />
         </div>
-        <div className="mx-auto w-full max-w-md rounded-3xl border border-white/70 bg-card p-6 shadow-[0_12px_40px_rgba(16,64,40,0.08)] sm:p-8 md:max-w-none">
+        <div className="mx-auto w-full max-w-md animate-in rounded-3xl border border-white/70 bg-card p-6 shadow-[0_12px_40px_rgba(16,64,40,0.08)] duration-700 fade-in slide-in-from-bottom-4 fill-mode-both sm:p-8 md:max-w-none">
           {children}
         </div>
       </main>

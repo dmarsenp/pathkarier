@@ -19,9 +19,9 @@ export function Hero() {
           width={560}
           height={352}
           priority
-          className="order-2 mx-auto w-full max-w-[520px] md:order-1"
+          className="order-2 mx-auto w-full max-w-[520px] animate-in fade-in slide-in-from-left-8 duration-700 fill-mode-both md:order-1"
         />
-        <div className="order-1 space-y-5 md:order-2">
+        <div className="order-1 animate-in space-y-5 duration-700 fade-in slide-in-from-bottom-4 fill-mode-both [animation-delay:150ms] md:order-2">
           <h1 className="text-balance text-4xl font-extrabold leading-tight text-primary md:text-5xl">
             Siap menemukan arah kariermu?
           </h1>

@@ -1,5 +1,6 @@
 import { Clock, ExternalLink, PlayCircle } from "lucide-react";
 import { LEARNING_RESOURCES } from "@/constants/learning-resources";
+import { enterStagger } from "@/lib/motion";
 import { rankResources } from "@/lib/resources";
 import type { RoadmapStep } from "@/types";
 
@@ -13,7 +14,7 @@ export function RoadmapTimeline({ steps }: RoadmapTimelineProps) {
       {steps.map((step, index) => {
         const links = rankResources(LEARNING_RESOURCES, [step.skill], 2);
         return (
-          <li key={step.urutan} className="relative">
+          <li key={step.urutan} className={`relative ${enterStagger(index)}`}>
             {index !== steps.length - 1 && (
               <span className="absolute -left-[2.35rem] top-8 h-[calc(100%-1rem)] w-0 border-l-2 border-dashed border-primary/30" />
             )}

@@ -42,6 +42,27 @@
   h1, h2, h3 {
     @apply tracking-tight;
   }
+  /* Edge/IE menambah ikon mata dan tombol hapus bawaan di input password; ikon kita sudah ada. */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Hormati pengguna yang mematikan animasi di pengaturan sistemnya. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 @layer utilities {

@@ -26,7 +26,7 @@ export function ScoreRing({ value, size = "lg", label = "cocok" }: ScoreRingProp
           strokeLinecap="round"
           strokeDasharray={CIRCUMFERENCE}
           strokeDashoffset={offset}
-          className="stroke-primary transition-[stroke-dashoffset] duration-700"
+          className="animate-ring-draw stroke-primary"
         />
       </svg>
       <div className="absolute text-center">

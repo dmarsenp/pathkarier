@@ -1,6 +1,7 @@
 "use client";
 
 import { Skeleton } from "@/components/ui/skeleton";
+import { enterStagger } from "@/lib/motion";
 import { useCareers } from "@/hooks/use-careers";
 import { useRecommendations } from "@/hooks/use-recommendations";
 import { PlanBadge } from "@/features/jalur/plan-badge";
@@ -25,11 +26,11 @@ export function RecommendationList() {
 
   return (
     <ol className="space-y-4">
-      {recommendations.map((result) => {
+      {recommendations.map((result, index) => {
         const career = getCareer(result.idKarier);
         if (!career) return null;
         return (
-          <li key={result.idKarier}>
+          <li key={result.idKarier} className={enterStagger(index)}>
             <CareerRankCard career={career} result={result} badge={<PlanBadge idKarier={career.id} />} />
           </li>
         );
